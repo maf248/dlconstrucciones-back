@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+// Importing API controller
+const usersController = require('../controllers/usersController');
+
+/* GET home page. */
+router.get('/', usersController.index);
 
 module.exports = router;
