@@ -5,7 +5,7 @@ module.exports = {
                 status: 200,
             },
             data: {
-                message: 'Contact Controller here (endpoint post para form de contacto, enviar a donde? Mail? Dashboard de Admin?)'
+                message: 'Contact Controller here (endpoint POST para form de contacto, enviar a Mail!! Paquete de node? y Dashboard de Admin?)'
             }
         }
         res.json(response)
