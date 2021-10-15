@@ -1,14 +1,22 @@
+const db = require('../db/models');
+
 module.exports = {
     index: (req, res, next) => {
-        var response = {
+        db.Job.findAll()
+        .then(jobs => {
+          
+
+          var response = {
             meta: {
                 status: 200,
             },
-            data: {
-                message: 'Jobs Controller here (categorias -> construccion / antenas)'
-            }
+            data: [
+                ...jobs
+            ]
         }
         res.json(response)
+        })
+        .catch(err => console.log(err))
     },
     
 }
