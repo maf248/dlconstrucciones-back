@@ -7,37 +7,17 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             allowNull: false
         },
-        first_name: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        last_name: {
+        description: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        email: {
+        image: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        avatar: {
-            type: DataTypes.STRING,
-            defaultValue: null
-        },
-        role: {
-            type: DataTypes.ENUM('admin', 'user'),
-            defaultValue: 'user'
-        },
-        phone: {
-            type: DataTypes.STRING,
-            defaultValue: null
-        },
-        dni: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            defaultValue: null
         },
         created_at: {
             type: DataTypes.DATE,
@@ -50,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     const config = {
-        tableName: 'users',
         timestamps: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
@@ -58,16 +37,9 @@ module.exports = (sequelize, DataTypes) => {
         paranoid: true
     }
 
-    const User = sequelize.define("User", cols, config);
-
-    User.associate = function (models) {
-        User.hasMany(models.Project, {
-            as: "Projects",
-            foreignKey: "users_id"
-        })
-    }
+    const Interest = sequelize.define("Interest", cols, config);
 
 
-    return User;
+    return Interest;
 
 }

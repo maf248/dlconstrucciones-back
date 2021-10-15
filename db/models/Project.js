@@ -2,13 +2,13 @@ module.exports = (sequelize, DataTypes) => {
 
     const cols = {
         id: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: DataTypes.BIGINT.UNSIGNED,
             primaryKey: true,
             autoIncrement: true,
             allowNull: false
         },
         balance: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: DataTypes.BIGINT.UNSIGNED,
             allowNull: false
         },
         created_at: {
