@@ -33,10 +33,12 @@ module.exports = (sequelize, DataTypes) => {
         },
         phone: {
             type: DataTypes.STRING,
+            allowNull: true,
             defaultValue: null
         },
         dni: {
             type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
             defaultValue: null
         },
         created_at: {
