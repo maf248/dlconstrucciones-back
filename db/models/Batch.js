@@ -7,40 +7,27 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             allowNull: false
         },
-        first_name: {
+        title: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        last_name: {
+        description: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        email: {
+        image: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        avatar: {
-            type: DataTypes.STRING,
+        price: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
             defaultValue: null
         },
-        role: {
-            type: DataTypes.ENUM('admin', 'user'),
+        sold: {
+            type: DataTypes.ENUM('true', 'false'),
             allowNull: false,
-            defaultValue: 'user'
-        },
-        phone: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            defaultValue: null
-        },
-        dni: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: true,
-            defaultValue: null
+            defaultValue: 'false'
         },
         created_at: {
             type: DataTypes.DATE,
@@ -53,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     const config = {
-        tableName: 'users',
+        tableName: 'batches',
         timestamps: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
@@ -61,16 +48,16 @@ module.exports = (sequelize, DataTypes) => {
         paranoid: true
     }
 
-    const User = sequelize.define("User", cols, config);
+    const Batch = sequelize.define("Batch", cols, config);
 
-    User.associate = function (models) {
-        User.hasMany(models.Project, {
-            as: "Projects",
-            foreignKey: "users_id"
+    Batch.associate = function (models) {
+        Batch.belongsTo(models.Category, {
+            as: "Categories",
+            foreignKey: "categories_id"
         })
     }
 
 
-    return User;
+    return Batch;
 
 }
