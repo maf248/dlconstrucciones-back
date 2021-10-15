@@ -2,21 +2,12 @@ module.exports = (sequelize, DataTypes) => {
 
     const cols = {
         id: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: DataTypes.BIGINT.UNSIGNED,
             primaryKey: true,
             autoIncrement: true,
             allowNull: false
         },
-        title: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        description: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            defaultValue: null
-        },
-        image: {
+        picture: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -31,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     const config = {
-        tableName: 'services',
+        tableName: 'pictures',
         timestamps: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
@@ -39,16 +30,16 @@ module.exports = (sequelize, DataTypes) => {
         paranoid: true
     }
 
-    const Service = sequelize.define("Service", cols, config);
+    const Picture = sequelize.define("Picture", cols, config);
 
-    Service.associate = function (models) {
-        Service.hasMany(models.Picture, {
-            as: "Pictures",
+    Picture.associate = function (models) {
+        Picture.belongsTo(models.Service, {
+            as: "Services",
             foreignKey: "services_id"
         })
     }
 
 
-    return Service;
+    return Picture;
 
 }

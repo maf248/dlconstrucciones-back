@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     const config = {
+        tableName: 'interests',
         timestamps: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
