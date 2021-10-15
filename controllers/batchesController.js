@@ -1,14 +1,22 @@
+const db = require('../db/models');
+
 module.exports = {
     index: (req, res, next) => {
-        var response = {
+        db.Batch.findAll()
+        .then(batches => {
+          
+
+          var response = {
             meta: {
                 status: 200,
             },
-            data: {
-                message: 'Batches Controller here (c/ CRUD, categorias -> costa esmeralda / campo)'
-            }
+            data: [
+                ...batches
+            ]
         }
         res.json(response)
+        })
+        .catch(err => console.log(err))
     },
     
 }
