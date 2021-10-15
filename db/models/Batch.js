@@ -55,6 +55,10 @@ module.exports = (sequelize, DataTypes) => {
             as: "Categories",
             foreignKey: "categories_id"
         })
+        Batch.hasMany(models.Image, {
+            as: "Images",
+            foreignKey: "batches_id"
+        })
     }
 
 
