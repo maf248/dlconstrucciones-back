@@ -2,8 +2,8 @@ const db = require('../db/models');
 
 module.exports = {
     index: (req, res, next) => {
-        db.Batch.findAll()
-        .then(batches => {
+        db.Category.findAll()
+        .then(categories => {
           
 
           var response = {
@@ -11,7 +11,7 @@ module.exports = {
                 status: 200,
             },
             data: [
-                ...batches
+                ...categories
             ]
         }
         res.json(response)
@@ -19,10 +19,10 @@ module.exports = {
         .catch(err => console.log(err))
     },
     detail: (req, res, next) => {
-        db.Batch.findByPk(req.params.id, {
+        db.Category.findByPk(req.params.id, {
             include: [
                 {
-                    association: "Images"
+                    association: "Batches"
                 }
             ]
         })
