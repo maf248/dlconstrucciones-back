@@ -33,6 +33,7 @@ router.get('/categories/:id', categoriesController.detail);
 
 
 router.get('/contact', contactController.index);
+router.post('/contact', contactController.contact);
 
 router.get('/', indexController.index);
 
