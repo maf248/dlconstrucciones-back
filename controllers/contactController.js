@@ -11,12 +11,15 @@ module.exports = {
         res.json(response)
     },
     contact: (req, res, next) => {
-        console.log(`El mail que llegó por POST es: ${req.body.email}`)
+        console.log(`email: ${req.body.email}`)
+        console.log(`comment: ${req.body.comment}`)
         var response = {
             meta: {
                 status: 200,
             },
             data: {
+                email: req.body.email,
+                comment: req.body.comment,
                 message: 'Contact Controller here (endpoint POST para form de contacto) - Falta implementar nodemailer por back y re-captcha por front'
             }
         }
