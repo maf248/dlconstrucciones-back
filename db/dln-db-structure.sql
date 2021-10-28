@@ -35,7 +35,6 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `dln-construcciones`.`services` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(100) NOT NULL,
-  `description` TEXT NULL DEFAULT NULL,
   `image` VARCHAR(100) NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -143,15 +142,15 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `dln-construcciones`.`pictures` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `services_id` BIGINT UNSIGNED NOT NULL,
+  `services_b_id` BIGINT UNSIGNED NOT NULL,
   `picture` VARCHAR(100) NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `services_pictures_idx` (`services_id` ASC),
+  INDEX `services_pictures_idx` (`services_b_id` ASC),
   CONSTRAINT `services_pictures`
-    FOREIGN KEY (`services_id`)
+    FOREIGN KEY (`services_b_id`)
     REFERENCES `dln-construcciones`.`services` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -193,6 +192,27 @@ CREATE TABLE IF NOT EXISTS `dln-construcciones`.`projects` (
   CONSTRAINT `users_projects`
     FOREIGN KEY (`users_id`)
     REFERENCES `dln-construcciones`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `dln-construcciones`.`contents`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `dln-construcciones`.`contents` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `services_a_id` BIGINT UNSIGNED NOT NULL,
+  `subtitle` VARCHAR(100) NULL DEFAULT NULL,
+  `text` TEXT NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
+  `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `services_contents_idx` (`services_a_id` ASC),
+  CONSTRAINT `services_contents`
+    FOREIGN KEY (`services_a_id`)
+    REFERENCES `dln-construcciones`.`services` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

@@ -38,34 +38,12 @@ Recaptación y reciclaje de aguas pluviales y de consumo:
 Cuidado del medio ambiente
 El uso racional del agua es una de las mejores maneras de cuidar el medio ambiente. La reutilización de un recurso limitado como es el agua en tareas como el riego de su jardín es una de las estrategias verdaderamente eco-sustentables de un hogar moderno.','termo-solar.jpg');
 
-INSERT INTO services (title, description, image) VALUES
-('Vivienda','Adquisición de lotes
+INSERT INTO services (title, image) VALUES
+('Vivienda','timthumb1.png'),
+('Antenas de Telecomunicaciones','timthumb2.png'),
+('Piscinas','timthumb3.png');
 
-Te asesoramos en la compra del terreno que mejor se adapte a tu proyecto, tomando en cuenta presupuesto, ubicación, nivel del lote y aquellos detalles que pueden pasar inadvertidos para el ojo inexperto.
-
-Proyecto de obra
-
-Estamos con vos en cada etapa, desde la idea original hasta el día en que ingreses por primera vez a tu casa terminada. Podemos guiarte en el proceso de diseño y desarrollo de un espacio que se adapte a tus características familiares y a tu estilo de vida.
-
-Ejecucion
-
-Contamos con una completa gama de profesionales de la construcción, bien establecidos y de amplia experiencia. Nos ocupamos de todos los detalles, desde la construcción más tradicional hasta desarrollos eco-sustentables y tecnología domótica.
-
-Direccion de obra
-
-Desde el primer día vas a estar al tanto de los adelantos y el control de tu obra, con "updates"  semanales a través de tu e-mail o de Whatsapp.
-
-Llave en mano
-
-Limpieza, terminaciones, mobiliario... todo lo que necesites para poder disfrutar de tu nuevo hogar desde el día del estreno. DLN Construcciones es la solución a tu medida. No lo dudes más, contactanos.','timthumb1.png'),
-('Antenas de Telecomunicaciones','Antenas de Telecomunicaciones
-Ejecución de Obra Civil en todo el país
-Montaje de Estructuras
-P.A.T.
-Ensayos de Hormigón Armado','timthumb2.png'),
-('Piscinas',NULL,'timthumb3.png');
-
-INSERT INTO pictures (services_id, picture) VALUES
+INSERT INTO pictures (services_b_id, picture) VALUES
 (3,'Vista-03.jpg'),
 (3,'Vista-05.jpg'),
 (3,'WhatsApp-Image-2019-03-23-at-11.43.31.jpeg'),
@@ -322,6 +300,19 @@ INSERT INTO images (batches_id, image) VALUES
 (13, 'terreno-venta-lote-D-NQ-NP-547615-MLA25291287391-012017-F.jpg'),
 (13, 'venta-lote-terreno-D-NQ-NP-321615-MLA25291290543-012017-F.jpg'),
 (13, 'venta-lote-terreno-D-NQ-NP-473615-MLA25291290120-012017-F.jpg');
+
+INSERT INTO contents (services_a_id, subtitle, text) VALUES
+(1,'Adquisición de lotes','
+Te asesoramos en la compra del terreno que mejor se adapte a tu proyecto, tomando en cuenta presupuesto, ubicación, nivel del lote y aquellos detalles que pueden pasar inadvertidos para el ojo inexperto.'),
+(1,'Proyecto de obra','Estamos con vos en cada etapa, desde la idea original hasta el día en que ingreses por primera vez a tu casa terminada. Podemos guiarte en el proceso de diseño y desarrollo de un espacio que se adapte a tus características familiares y a tu estilo de vida.'),
+(1,'Ejecucion','Contamos con una completa gama de profesionales de la construcción, bien establecidos y de amplia experiencia. Nos ocupamos de todos los detalles, desde la construcción más tradicional hasta desarrollos eco-sustentables y tecnología domótica.'),
+(1,'Direccion de obra','Desde el primer día vas a estar al tanto de los adelantos y el control de tu obra, con "updates"  semanales a través de tu e-mail o de Whatsapp.'),
+(1,'Llave en mano','Limpieza, terminaciones, mobiliario... todo lo que necesites para poder disfrutar de tu nuevo hogar desde el día del estreno. DLN Construcciones es la solución a tu medida. No lo dudes más, contactanos.'),
+(1,'Antenas de Telecomunicaciones',NULL),
+(1,NULL,'Ejecución de Obra Civil en todo el país'),
+(1,NULL,'Montaje de Estructuras'),
+(1,NULL,'P.A.T.'),
+(1,NULL,'Ensayos de Hormigón Armado');
 
 
 INSERT INTO users (first_name, last_name, email, password, avatar, dni, role) VALUES 
