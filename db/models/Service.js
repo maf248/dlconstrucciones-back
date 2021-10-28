@@ -11,11 +11,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        description: {
-            type: DataTypes.STRING,
-            allowNull: true,
-            defaultValue: null
-        },
         image: {
             type: DataTypes.STRING,
             allowNull: false
@@ -44,7 +39,11 @@ module.exports = (sequelize, DataTypes) => {
     Service.associate = function (models) {
         Service.hasMany(models.Picture, {
             as: "Pictures",
-            foreignKey: "services_id"
+            foreignKey: "services_b_id"
+        })
+        Service.hasMany(models.Content, {
+            as: "Contents",
+            foreignKey: "services_a_id"
         })
     }
 

@@ -7,9 +7,15 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             allowNull: false
         },
-        picture: {
+        subtitle: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true,
+            defaultValue: null
+        },
+        text: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            defaultValue: null
         },
         created_at: {
             type: DataTypes.DATE,
@@ -22,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     const config = {
-        tableName: 'pictures',
+        tableName: 'contents',
         timestamps: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
@@ -30,16 +36,16 @@ module.exports = (sequelize, DataTypes) => {
         paranoid: true
     }
 
-    const Picture = sequelize.define("Picture", cols, config);
+    const Content = sequelize.define("Content", cols, config);
 
-    Picture.associate = function (models) {
-        Picture.belongsTo(models.Service, {
+    Content.associate = function (models) {
+        Content.belongsTo(models.Service, {
             as: "Services",
-            foreignKey: "services_b_id"
+            foreignKey: "services_a_id"
         })
     }
 
 
-    return Picture;
+    return Content;
 
 }

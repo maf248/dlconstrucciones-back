@@ -308,11 +308,11 @@ Te asesoramos en la compra del terreno que mejor se adapte a tu proyecto, tomand
 (1,'Ejecucion','Contamos con una completa gama de profesionales de la construcción, bien establecidos y de amplia experiencia. Nos ocupamos de todos los detalles, desde la construcción más tradicional hasta desarrollos eco-sustentables y tecnología domótica.'),
 (1,'Direccion de obra','Desde el primer día vas a estar al tanto de los adelantos y el control de tu obra, con "updates"  semanales a través de tu e-mail o de Whatsapp.'),
 (1,'Llave en mano','Limpieza, terminaciones, mobiliario... todo lo que necesites para poder disfrutar de tu nuevo hogar desde el día del estreno. DLN Construcciones es la solución a tu medida. No lo dudes más, contactanos.'),
-(1,'Antenas de Telecomunicaciones',NULL),
-(1,NULL,'Ejecución de Obra Civil en todo el país'),
-(1,NULL,'Montaje de Estructuras'),
-(1,NULL,'P.A.T.'),
-(1,NULL,'Ensayos de Hormigón Armado');
+(2,'Antenas de Telecomunicaciones',NULL),
+(2,NULL,'Ejecución de Obra Civil en todo el país'),
+(2,NULL,'Montaje de Estructuras'),
+(2,NULL,'P.A.T.'),
+(2,NULL,'Ensayos de Hormigón Armado');
 
 
 INSERT INTO users (first_name, last_name, email, password, avatar, dni, role) VALUES 

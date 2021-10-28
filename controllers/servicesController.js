@@ -23,6 +23,9 @@ module.exports = {
             include: [
                 {
                     association: "Pictures"
+                },
+                {
+                    association: "Contents"
                 }
             ]
         })
