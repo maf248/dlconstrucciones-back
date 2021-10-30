@@ -3,7 +3,9 @@ const db = require('../db/models');
 const bodyParser = require('body-parser');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {validationResult} = require('express-validator');
+const {
+    validationResult
+} = require('express-validator');
 
 const config = require('../configs/config');
 
@@ -63,12 +65,23 @@ module.exports = {
                 expiresIn: '2h'
             });
             res.json({
-                mensaje: 'Autenticación correcta',
-                token: token
+                meta: {
+                    status: 200
+                },
+                data: {
+                    message: 'Autenticación correcta',
+                    token: token
+                }
+
             });
         } else {
             res.json({
-                mensaje: "Usuario o contraseña incorrectos"
+                meta: {
+                    status: 401
+                },
+                data: {
+                    message: "Usuario o contraseña incorrectos"
+                }
             })
         }
     },
@@ -79,8 +92,13 @@ module.exports = {
         if (!errors.isEmpty()) {
 
             return res.json({
-                errors: errors.errors,
-                body: req.body
+                meta: {
+                    status: 401
+                },
+                data: {
+                    errors: errors.errors,
+                    body: req.body
+                }
             });
 
         } else {

@@ -11,11 +11,16 @@ function webTokenMiddleware(req, res, next) {
 
     if (token) {
         jwt.verify(token, app.get('llave'), (err, decoded) => {
-            
+
             if (err) {
                 console.log(err);
                 return res.json({
-                    mensaje: 'Token inválida'
+                    meta: {
+                        status: 401
+                    },
+                    data: {
+                        message: 'Token inválida'
+                    }
                 });
             } else {
                 req.decoded = decoded;
@@ -26,7 +31,12 @@ function webTokenMiddleware(req, res, next) {
         });
     } else {
         res.send({
-            mensaje: 'Token no proveída.'
+            meta: {
+                status: 401
+            },
+            data: {
+                message: 'Token no proveída.'
+            }
         });
     }
 };
