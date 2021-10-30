@@ -6,19 +6,21 @@ const config = require('../configs/config');
 
 app.set('llave', config.llave);
 
-function webTokenMiddleware (req, res, next) {
+function webTokenMiddleware(req, res, next) {
     const token = req.headers['access-token'];
 
     if (token) {
         jwt.verify(token, app.get('llave'), (err, decoded) => {
-            console.log(err);
-            console.log(decoded);
+            
             if (err) {
+                console.log(err);
                 return res.json({
                     mensaje: 'Token inválida'
                 });
             } else {
                 req.decoded = decoded;
+                console.log(decoded);
+                console.log(`User role: ${decoded.role}`);
                 next();
             }
         });

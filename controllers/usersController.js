@@ -3,6 +3,7 @@ const db = require('../db/models');
 const bodyParser = require('body-parser');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const {validationResult} = require('express-validator');
 
 const config = require('../configs/config');
 
@@ -52,13 +53,14 @@ module.exports = {
 
         let passwordCheck = bcryptjs.compareSync(req.body.password, user.password);
         console.log(passwordCheck);
-        
+
         if (user && passwordCheck) {
             const payload = {
-                check: true
+                check: true,
+                role: user.role
             };
             const token = jwt.sign(payload, app.get('llave'), {
-                expiresIn: 1440
+                expiresIn: '2h'
             });
             res.json({
                 mensaje: 'Autenticación correcta',
@@ -68,6 +70,41 @@ module.exports = {
             res.json({
                 mensaje: "Usuario o contraseña incorrectos"
             })
+        }
+    },
+    register: async (req, res, next) => {
+
+        let errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+
+            return res.json({
+                errors: errors.errors,
+                body: req.body
+            });
+
+        } else {
+
+            db.User.create({
+                hash_id: bcryptjs.hashSync("user name " + req.body.firstName, 10),
+                first_name: req.body.fullName.split(' ')[0],
+                last_name: req.body.fullName.split(' ')[1],
+                email: req.body.email,
+                dni: req.body.dni,
+                password: bcryptjs.hashSync(req.body.password, 10),
+                role: 'user'
+            }).then(value => {
+
+                res.json({
+                    meta: {
+                        status: 200
+                    },
+                    data: {
+                        ...value
+                    }
+                });
+            }).catch(err => console.log(err))
+
         }
     },
 
