@@ -11,6 +11,7 @@ const batchesController = require('../controllers/batchesController');
 const categoriesController = require('../controllers/categoriesController');
 const contactController = require('../controllers/contactController');
 
+const contactValidate = require('../middlewares/contactValidate');
 
 router.get('/interests', interestsController.index);
 
@@ -33,7 +34,7 @@ router.get('/categories/:id', categoriesController.detail);
 
 
 router.get('/contact', contactController.index);
-router.post('/contact', contactController.contact);
+router.post('/contact', contactValidate, contactController.contact);
 
 router.get('/', indexController.index);
 

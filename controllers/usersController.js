@@ -3,9 +3,7 @@ const db = require('../db/models');
 const bodyParser = require('body-parser');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {
-    validationResult
-} = require('express-validator');
+const { validationResult } = require('express-validator');
 
 const config = require('../configs/config');
 
