@@ -22,11 +22,14 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.static(process.cwd() + "/public/"));
 
+app.use('/api', indexRouter);
+app.use('/api/users', usersRouter);
+
 app.get('/', (req, res) => {
   res.sendFile(process.cwd() + "/public/index.html")
 });
-
-app.use('/api', indexRouter);
-app.use('/api/users', usersRouter);
+app.get('*', (req, res) => {
+  res.sendFile(process.cwd() + "/public/index.html")
+});
 
 module.exports = app;
