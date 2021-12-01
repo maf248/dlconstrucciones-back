@@ -3,12 +3,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const bodyParser = require("body-parser");
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
-const bodyParser = require("body-parser");
 const port = 3000;
 
 app.use(logger('dev'));
@@ -20,7 +20,7 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 
 app.use(bodyParser.json());
-app.use(express.static(process.cwd() + "/public/"));
+app.use(express.static(process.cwd() + "/public/images"));
 
 app.get('/', (req, res) => {
   res.sendFile(process.cwd() + "/public/index.html")
