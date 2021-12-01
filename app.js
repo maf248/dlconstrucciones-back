@@ -20,7 +20,7 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 
 app.use(bodyParser.json());
-app.use(express.static(process.cwd() + "/public/images"));
+app.use(express.static(process.cwd() + "/public/"));
 
 app.get('/', (req, res) => {
   res.sendFile(process.cwd() + "/public/index.html")
