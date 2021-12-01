@@ -60,7 +60,7 @@ module.exports = {
                 role: user.role
             };
             const token = jwt.sign(payload, app.get('llave'), {
-                expiresIn: '2h'
+                expiresIn: '12h'
             });
             res.json({
                 meta: {
@@ -116,7 +116,7 @@ module.exports = {
                         status: 200
                     },
                     data: {
-                        ...value
+                        ...value.dataValues
                     }
                 });
             }).catch(err => console.log(err))
