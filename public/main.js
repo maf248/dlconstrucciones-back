@@ -254,8 +254,8 @@ __webpack_require__.r(__webpack_exports__);
 // The list of file replacements can be found in `angular.json`.
 const environment = {
     production: false,
-    API_BASE_URL: 'http://localhost:3000/api',
-    API_IMAGE_URL: 'http://localhost:3000/images'
+    API_BASE_URL: `${window.location.host}/api`,
+    API_IMAGE_URL: `${window.location.host}/images`
 };
 /*
  * For easier debugging in development mode, you can import the following file
