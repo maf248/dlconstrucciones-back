@@ -10,7 +10,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
-const port = Number(process.env.PORT);
+const port = Number(process.env.PORT || 80);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -21,10 +21,11 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 
 app.use(bodyParser.json());
-app.use(express.static(process.cwd() + '/public/'));
 
 app.use('/api', indexRouter);
 app.use('/api/users', usersRouter);
+
+app.use(express.static(process.cwd() + '/public/'));
 
 app.get('/', (req, res) => {
   res.sendFile(process.cwd() + '/public/index.html')
