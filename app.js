@@ -10,7 +10,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
-const port = Number(process.env.PORT || 80);
+const port = Number(process.env.PORT || 8080);
 
 app.use(logger('dev'));
 app.use(express.json());
