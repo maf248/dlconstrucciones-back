@@ -2228,9 +2228,13 @@ html, body {
 body {
   margin: auto;
   font-family: "Oswald", sans-serif !important;
+  box-sizing: border-box;
 }
 h1, h2, h3, h4, h5, h6, span, label, p, button, a, mat-form-field {
   font-family: "Oswald", sans-serif !important;
+}
+p {
+  font-size: 20px;
 }
 .primary {
   color: #4bb0d0 !important;
@@ -2267,6 +2271,9 @@ mat-menu button:hover, .mat-menu-content button:hover {
 }
 .pointer {
   cursor: pointer;
+}
+mat-grid-tile {
+  margin: 5px;
 }
 
 /*# sourceMappingURL=styles.css.map*/

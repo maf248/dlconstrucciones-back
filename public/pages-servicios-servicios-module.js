@@ -116,7 +116,7 @@ const routes = [
     },
     {
         path: ':servicioId',
-        loadChildren: () => Promise.all(/*! import() | tipo-servicio-tipo-servicio-module */[__webpack_require__.e("default~tipo-servicio-tipo-servicio-module~tipo-trabajo-tipo-trabajo-module"), __webpack_require__.e("tipo-servicio-tipo-servicio-module")]).then(__webpack_require__.bind(null, /*! ./tipo-servicio/tipo-servicio.module */ "5r/R")).then(m => m.TipoServicioModule)
+        loadChildren: () => __webpack_require__.e(/*! import() | tipo-servicio-tipo-servicio-module */ "tipo-servicio-tipo-servicio-module").then(__webpack_require__.bind(null, /*! ./tipo-servicio/tipo-servicio.module */ "5r/R")).then(m => m.TipoServicioModule)
     },
     {
         path: '**',

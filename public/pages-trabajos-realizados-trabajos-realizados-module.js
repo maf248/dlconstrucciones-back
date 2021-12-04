@@ -24,7 +24,7 @@ const routes = [
     },
     {
         path: ':idTipoTrabajo',
-        loadChildren: () => Promise.all(/*! import() | tipo-trabajo-tipo-trabajo-module */[__webpack_require__.e("default~tipo-servicio-tipo-servicio-module~tipo-trabajo-tipo-trabajo-module"), __webpack_require__.e("tipo-trabajo-tipo-trabajo-module")]).then(__webpack_require__.bind(null, /*! ./tipo-trabajo/tipo-trabajo.module */ "9dl/")).then(m => m.TipoTrabajoModule)
+        loadChildren: () => __webpack_require__.e(/*! import() | tipo-trabajo-tipo-trabajo-module */ "tipo-trabajo-tipo-trabajo-module").then(__webpack_require__.bind(null, /*! ./tipo-trabajo/tipo-trabajo.module */ "9dl/")).then(m => m.TipoTrabajoModule)
     }
 ];
 class TrabajosRealizadosRoutingModule {
