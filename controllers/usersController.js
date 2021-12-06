@@ -48,10 +48,10 @@ module.exports = {
     },
     login: async (req, res, next) => {
 
-        let user = await findUser(req.body.email);
+        const user = await findUser(req.body.email);
         console.log(user);
 
-        let passwordCheck = bcryptjs.compareSync(req.body.password, user.password);
+        const passwordCheck = bcryptjs.compareSync(req.body.password, user.password);
         console.log(passwordCheck);
 
         if (user && passwordCheck) {
@@ -62,14 +62,17 @@ module.exports = {
             const token = jwt.sign(payload, app.get('llave'), {
                 expiresIn: '12h'
             });
+            user.password = undefined;
             res.json({
                 meta: {
                     status: 200
                 },
                 data: {
                     message: 'Autenticación correcta',
-                    token: token
-                }
+                    token: token,
+                    user: user
+                },
+                
 
             });
         } else {
@@ -103,20 +106,22 @@ module.exports = {
 
             db.User.create({
                 hash_id: bcryptjs.hashSync("user name " + req.body.firstName, 10),
-                first_name: req.body.fullName.split(' ')[0],
-                last_name: req.body.fullName.split(' ')[1],
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
                 email: req.body.email,
                 dni: req.body.dni,
                 password: bcryptjs.hashSync(req.body.password, 10),
                 role: 'user'
             }).then(value => {
 
+                value.dataValues.password = undefined;
+            
                 res.json({
                     meta: {
                         status: 200
                     },
                     data: {
-                        ...value.dataValues
+                        user: {...value.dataValues}
                     }
                 });
             }).catch(err => console.log(err))
