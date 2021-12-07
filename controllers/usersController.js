@@ -50,10 +50,12 @@ module.exports = {
 
         const user = await findUser(req.body.email);
         console.log(user);
-
-        const passwordCheck = bcryptjs.compareSync(req.body.password, user.password);
-        console.log(passwordCheck);
-
+        
+        if (user) {
+            var passwordCheck = bcryptjs.compareSync(req.body.password, user.password);
+            console.log(passwordCheck);
+        }
+        
         if (user && passwordCheck) {
             const payload = {
                 check: true,
@@ -62,7 +64,7 @@ module.exports = {
             const token = jwt.sign(payload, app.get('llave'), {
                 expiresIn: '12h'
             });
-            user.password = undefined;
+            // user.password = undefined;
             res.json({
                 meta: {
                     status: 200
@@ -89,7 +91,7 @@ module.exports = {
     register: async (req, res, next) => {
 
         let errors = validationResult(req);
-
+        console.log(errors)
         if (!errors.isEmpty()) {
 
             return res.json({
