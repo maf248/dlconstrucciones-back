@@ -9,7 +9,9 @@ const webTokenMiddleware = require('../middlewares/webTokenMiddleware');
 const registrationValidate = require('../middlewares/registrationValidate');
 
 /* GET home page. */
-router.get('/', webTokenMiddleware, usersController.index);
+router.get('/', webTokenMiddleware, usersController.list);
+
+router.get('/:id', webTokenMiddleware, usersController.detail);
 
 router.post('/login', usersController.login);
 

@@ -29,8 +29,26 @@ async function findUser(email) {
 }
 
 module.exports = {
-    index: (req, res, next) => {
+    list: (req, res, next) => {
         db.User.findAll({
+            include: [{
+              association: "Projects"
+            }]
+        })
+            .then(user => {
+                var response = {
+                    meta: {
+                        status: 200,
+                    },
+                    data: user
+                }
+                res.json(response)
+            })
+            .catch(err => console.log(err))
+    },
+    detail: (req, res, next) => {
+        db.User.findOne({
+            where: { id: req.params.id },
             include: [{
               association: "Projects"
             }]
@@ -41,7 +59,7 @@ module.exports = {
                         status: 200,
                     },
                     data: [
-                        ...users
+                        users
                     ]
                 }
                 res.json(response)
