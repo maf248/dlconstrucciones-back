@@ -317,4 +317,4 @@ Te asesoramos en la compra del terreno que mejor se adapte a tu proyecto, tomand
 
 INSERT INTO users (first_name, last_name, email, password, avatar, dni, role) VALUES 
 ('Tobias','Blaksley','tobias.blaksley@hotmail.com','$2a$10$nY9qIx.MJ4cXVG5csGpFFeQzQl4J2h0zhT.VndbdlnZOGzYjdbcmW','Usuario-1_1610562779647.jfif',NULL,'admin'),
-('Marcelo','Fanego','mafmaggot@gmail.com','$2a$10$MHA8vyzxjf4h8rg.WVSPEeXvh9ZX5Uv/a9s58zz70WrnOQdkNLMhW','Usuario-4_1611071905072.png',35960622,'user');
+('Marcelo','Fanego','mafmaggot@gmail.com','$2a$10$MHA8vyzxjf4h8rg.WVSPEeXvh9ZX5Uv/a9s58zz70WrnOQdkNLMhW','Usuario-4_1611071905072.png',35960622,'admin');
