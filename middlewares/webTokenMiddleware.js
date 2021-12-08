@@ -26,7 +26,18 @@ function webTokenMiddleware(req, res, next) {
                 req.decoded = decoded;
                 console.log(decoded);
                 console.log(`User role: ${decoded.role}`);
-                next();
+                if (decoded.role === 'admin') {
+                    next();
+                } else {
+                    return res.json({
+                        meta: {
+                            status: 401
+                        },
+                        data: {
+                            message: 'Token restringida'
+                        }
+                    });
+                }
             }
         });
     } else {

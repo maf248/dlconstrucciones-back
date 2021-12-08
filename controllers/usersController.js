@@ -30,10 +30,12 @@ async function findUser(email) {
 
 module.exports = {
     index: (req, res, next) => {
-        db.User.findAll()
+        db.User.findAll({
+            include: [{
+              association: "Projects"
+            }]
+        })
             .then(users => {
-
-
                 var response = {
                     meta: {
                         status: 200,
