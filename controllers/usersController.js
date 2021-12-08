@@ -115,7 +115,13 @@ module.exports = {
                 password: bcryptjs.hashSync(req.body.password, 10),
                 role: 'user'
             }).then(value => {
-
+                const payload = {
+                    check: true,
+                    role: value.dataValues.role
+                };
+                const token = jwt.sign(payload, app.get('llave'), {
+                    expiresIn: '12h'
+                });
                 value.dataValues.password = undefined;
             
                 res.json({
@@ -123,6 +129,7 @@ module.exports = {
                         status: 200
                     },
                     data: {
+                        token: token,
                         user: {...value.dataValues}
                     }
                 });
