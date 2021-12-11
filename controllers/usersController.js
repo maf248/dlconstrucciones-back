@@ -3,7 +3,9 @@ const db = require('../db/models');
 const bodyParser = require('body-parser');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { validationResult } = require('express-validator');
+const {
+    validationResult
+} = require('express-validator');
 
 const config = require('../configs/config');
 
@@ -31,10 +33,10 @@ async function findUser(email) {
 module.exports = {
     list: (req, res, next) => {
         db.User.findAll({
-            include: [{
-              association: "Projects"
-            }]
-        })
+                include: [{
+                    association: "Projects"
+                }]
+            })
             .then(user => {
                 var response = {
                     meta: {
@@ -48,11 +50,13 @@ module.exports = {
     },
     detail: (req, res, next) => {
         db.User.findOne({
-            where: { id: req.params.id },
-            include: [{
-              association: "Projects"
-            }]
-        })
+                where: {
+                    id: req.params.id
+                },
+                include: [{
+                    association: "Projects"
+                }]
+            })
             .then(users => {
                 var response = {
                     meta: {
@@ -69,9 +73,169 @@ module.exports = {
     profile: async (req, res, next) => {
 
         let errors = validationResult(req);
-        console.log(errors)
-        if (!errors.isEmpty()) {
 
+        if (errors.isEmpty()) {
+
+            db.User.update({
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    dni: req.body.dni,
+                    phone: req.body.phone,
+                    email: req.body.email,
+                    password: bcryptjs.hashSync(req.body.password, 10),
+                }, {
+                    where: {
+                        hash_id: req.selfHashId
+                    }
+                })
+                .then(() => {
+                    db.User.findOne({
+                            where: {
+                                hash_id: req.selfHashId
+                            }
+                        })
+                        .then((user) => {
+                            var response = {
+                                meta: {
+                                    status: 200,
+                                },
+                                data: user
+                            }
+                            res.json(response)
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
+        } else if (errors.errors.length < 3 && errors.errors.some(x => x.param === 'password') && errors.errors.some(x => x.param === 'passwordRepeat')) {
+
+            db.User.update({
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    dni: req.body.dni,
+                    phone: req.body.phone,
+                    email: req.body.email
+                }, {
+                    where: {
+                        hash_id: req.selfHashId
+                    }
+                })
+                .then(() => {
+                    db.User.findOne({
+                            where: {
+                                hash_id: req.selfHashId
+                            }
+                        })
+                        .then((user) => {
+                            var response = {
+                                meta: {
+                                    status: 200,
+                                },
+                                data: user
+                            }
+                            res.json(response)
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        } else if (errors.errors.length <= 3 && (errors.errors.some(x => x.param === 'password') || errors.errors.some(x => x.param === 'passwordRepeat')) && errors.errors.some(x => x.msg === 'El email introducido ya se encuentra registrado')) {
+
+            db.User.update({
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    dni: req.body.dni,
+                    phone: req.body.phone
+                }, {
+                    where: {
+                        hash_id: req.selfHashId
+                    }
+                })
+                .then(() => {
+                    db.User.findOne({
+                            where: {
+                                hash_id: req.selfHashId
+                            }
+                        })
+                        .then((user) => {
+                            var response = {
+                                meta: {
+                                    status: 200,
+                                },
+                                data: user
+                            }
+                            res.json(response)
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        } else if (errors.errors.length === 1 && errors.errors.some(x => x.param === 'email')) {
+            db.User.findOne({
+                    where: {
+                        hash_id: req.selfHashId
+                    }
+                })
+                .then((user) => {
+                    if (user.email === req.body.email) {
+                        db.User.update({
+                                first_name: req.body.first_name,
+                                last_name: req.body.last_name,
+                                dni: req.body.dni,
+                                phone: req.body.phone,
+                                password: bcryptjs.hashSync(req.body.password, 10),
+                            }, {
+                                where: {
+                                    hash_id: req.selfHashId
+                                }
+                            })
+                            .then(() => {
+                                db.User.findOne({
+                                        where: {
+                                            hash_id: req.selfHashId
+                                        }
+                                    })
+                                    .then((user) => {
+                                        var response = {
+                                            meta: {
+                                                status: 200,
+                                            },
+                                            data: user
+                                        }
+                                        res.json(response)
+                                    })
+                                    .catch(err => {
+                                        console.log(err)
+                                    })
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                    } else if (errors.errors.msg == 'El email introducido ya se encuentra registrado') {
+                        return res.json({
+                            meta: {
+                                status: 401
+                            },
+                            data: {
+                                errors: 'Email ya registrado'
+                            }
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        } else {
             return res.json({
                 meta: {
                     status: 401
@@ -81,22 +245,18 @@ module.exports = {
                     body: req.body
                 }
             });
-
-        } else {
-
-            res.json(req.body)
         }
     },
     login: async (req, res, next) => {
 
         const user = await findUser(req.body.email);
         console.log(user);
-        
+
         if (user) {
             var passwordCheck = bcryptjs.compareSync(req.body.password, user.password);
             console.log(passwordCheck);
         }
-        
+
         if (user && passwordCheck) {
             const payload = {
                 check: true,
@@ -107,7 +267,7 @@ module.exports = {
                 expiresIn: '12h'
             });
             user.password = undefined;
-            
+
             res.json({
                 meta: {
                     status: 200
@@ -117,7 +277,7 @@ module.exports = {
                     token: token,
                     user: user
                 },
-                
+
 
             });
         } else {
@@ -158,7 +318,7 @@ module.exports = {
                 password: bcryptjs.hashSync(req.body.password, 10),
                 role: 'user'
             }).then(value => {
-                
+
                 const payload = {
                     check: true,
                     role: value.dataValues.role
@@ -167,19 +327,51 @@ module.exports = {
                     expiresIn: '12h'
                 });
                 value.dataValues.password = undefined;
-            
+
                 res.json({
                     meta: {
                         status: 200
                     },
                     data: {
                         token: token,
-                        user: {...value.dataValues}
+                        user: {
+                            ...value.dataValues
+                        }
                     }
                 });
             }).catch(err => console.log(err))
 
         }
     },
+    identify: async (req, res, next) => {
 
+        if (req.selfHashId) {
+            db.User.findOne({
+                    where: {
+                        hash_id: req.selfHashId
+                    }
+                })
+                .then(user => {
+                    user.password = undefined;
+
+                    var response = {
+                        meta: {
+                            status: 200,
+                        },
+                        data: user
+                    }
+                    res.json(response)
+                })
+                .catch(err => console.log(err))
+        } else {
+            return res.json({
+                meta: {
+                    status: 401
+                },
+                data: {
+                    errors: 'Token invalida'
+                }
+            })
+        }
+    }
 }

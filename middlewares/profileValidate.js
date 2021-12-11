@@ -40,10 +40,10 @@ module.exports = [
                 }
             });
 
-            if (user == null) {
+            if (user === null) {
                 return true;
 
-            } else if (user != null) {
+            } else if (user !== null) {
                 return Promise.reject();
             }
 
