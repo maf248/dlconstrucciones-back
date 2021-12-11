@@ -6,7 +6,7 @@ const config = require('../configs/config');
 
 app.set('llave', config.llave);
 
-function webTokenMiddleware(req, res, next) {
+function adminWebTokenMiddleware(req, res, next) {
     const token = req.headers['access-token'];
 
     if (token) {
@@ -52,4 +52,4 @@ function webTokenMiddleware(req, res, next) {
     }
 };
 
-module.exports = webTokenMiddleware;
+module.exports = adminWebTokenMiddleware;

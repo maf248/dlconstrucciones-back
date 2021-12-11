@@ -66,6 +66,27 @@ module.exports = {
             })
             .catch(err => console.log(err))
     },
+    profile: async (req, res, next) => {
+
+        let errors = validationResult(req);
+        console.log(errors)
+        if (!errors.isEmpty()) {
+
+            return res.json({
+                meta: {
+                    status: 401
+                },
+                data: {
+                    errors: errors.errors,
+                    body: req.body
+                }
+            });
+
+        } else {
+
+            res.json(req.body)
+        }
+    },
     login: async (req, res, next) => {
 
         const user = await findUser(req.body.email);
@@ -79,12 +100,14 @@ module.exports = {
         if (user && passwordCheck) {
             const payload = {
                 check: true,
-                role: user.role
+                role: user.role,
+                hash_id: user.hash_id
             };
             const token = jwt.sign(payload, app.get('llave'), {
                 expiresIn: '12h'
             });
-            // user.password = undefined;
+            user.password = undefined;
+            
             res.json({
                 meta: {
                     status: 200
@@ -135,6 +158,7 @@ module.exports = {
                 password: bcryptjs.hashSync(req.body.password, 10),
                 role: 'user'
             }).then(value => {
+                
                 const payload = {
                     check: true,
                     role: value.dataValues.role

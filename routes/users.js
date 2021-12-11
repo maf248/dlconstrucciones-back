@@ -5,13 +5,16 @@ var router = express.Router();
 const usersController = require('../controllers/usersController');
 
 // Importing middleware for protected routes
-const webTokenMiddleware = require('../middlewares/webTokenMiddleware');
+const adminWebTokenMiddleware = require('../middlewares/adminWebTokenMiddleware');
 const registrationValidate = require('../middlewares/registrationValidate');
+const profileValidate = require('../middlewares/profileValidate');
 
 /* GET home page. */
-router.get('/', webTokenMiddleware, usersController.list);
+router.get('/', adminWebTokenMiddleware, usersController.list);
 
-router.get('/:id', webTokenMiddleware, usersController.detail);
+router.get('/:id', adminWebTokenMiddleware, usersController.detail);
+
+router.post('/profile', profileValidate, usersController.profile);
 
 router.post('/login', usersController.login);
 

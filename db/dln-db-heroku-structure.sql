@@ -122,6 +122,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `heroku_502c605a2beb3b4`.`users` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `hash_id` VARCHAR(100) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
   `password` VARCHAR(100) NOT NULL,
   `first_name` VARCHAR(100) NOT NULL,
@@ -129,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `heroku_502c605a2beb3b4`.`users` (
   `avatar` VARCHAR(100) NULL DEFAULT NULL,
   `dni` INT UNSIGNED NULL DEFAULT NULL,
   `phone` VARCHAR(45) NULL DEFAULT NULL,
-  `role` ENUM('admin', 'user') NOT NULL DEFAULT 'user',
+  `role` ENUM('master','admin', 'user') NOT NULL DEFAULT 'user',
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
