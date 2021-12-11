@@ -9,9 +9,12 @@ const typesController = require('../controllers/typesController')
 const jobsController = require('../controllers/jobsController');
 const batchesController = require('../controllers/batchesController');
 const categoriesController = require('../controllers/categoriesController');
+const projectsController = require('../controllers/projectsController');
 const contactController = require('../controllers/contactController');
 
+// Importing middleware for protected routes
 const contactValidate = require('../middlewares/contactValidate');
+const adminWebTokenMiddleware = require('../middlewares/adminWebTokenMiddleware');
 
 router.get('/interests', interestsController.index);
 
@@ -21,10 +24,8 @@ router.get('/services/:id', servicesController.detail);
 router.get('/types/', typesController.index);
 router.get('/types/:id', typesController.detail);
 
-
 router.get('/jobs', jobsController.index);
 router.get('/jobs/:id', jobsController.detail);
-
 
 router.get('/batches', batchesController.index);
 router.get('/batches/:id', batchesController.detail);
@@ -32,8 +33,9 @@ router.get('/batches/:id', batchesController.detail);
 router.get('/categories', categoriesController.index);
 router.get('/categories/:id', categoriesController.detail);
 
+router.get('/projects', adminWebTokenMiddleware, projectsController.index);
+router.get('/projects/:id', adminWebTokenMiddleware, projectsController.detail);
 
-router.get('/contact', contactController.index);
 router.post('/contact', contactValidate, contactController.contact);
 
 router.get('/', indexController.index);

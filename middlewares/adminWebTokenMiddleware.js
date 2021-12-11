@@ -26,7 +26,7 @@ function adminWebTokenMiddleware(req, res, next) {
                 req.decoded = decoded;
                 console.log(decoded);
                 console.log(`User role: ${decoded.role}`);
-                if (decoded.role === 'admin') {
+                if (decoded.role === 'admin' || decoded.role === 'master') {
                     next();
                 } else {
                     return res.json({
