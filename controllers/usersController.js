@@ -271,6 +271,8 @@ module.exports = {
                             }
                         })
                         .then((user) => {
+                            user.password = undefined;
+                            
                             var response = {
                                 meta: {
                                     status: 200,
