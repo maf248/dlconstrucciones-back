@@ -8,7 +8,7 @@ app.set('llave', config.llave);
 
 function selfWebTokenMiddleware(req, res, next) {
     const token = req.headers['access-token'];
-    console.log('PASA POR ACAAA')
+    
     if (token) {
         jwt.verify(token, app.get('llave'), (err, decoded) => {
 

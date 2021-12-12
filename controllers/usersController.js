@@ -247,6 +247,59 @@ module.exports = {
             });
         }
     },
+    avatar: async (req, res, next) => {
+
+        let errors = validationResult(req);
+
+        console.log(req.selfHashId);
+        console.log(errors.errors);
+        console.log(req.file.filename);
+
+        if (errors.isEmpty()) {
+
+            db.User.update({
+                    avatar: req.file.filename,
+                }, {
+                    where: {
+                        hash_id: req.selfHashId
+                    }
+                })
+                .then(() => {
+                    db.User.findOne({
+                            where: {
+                                hash_id: req.selfHashId
+                            }
+                        })
+                        .then((user) => {
+                            var response = {
+                                meta: {
+                                    status: 200,
+                                },
+                                data: user
+                            }
+                            res.json(response)
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
+        } else {
+
+            return res.json({
+                meta: {
+                    status: 401
+                },
+                data: {
+                    errors: errors.errors,
+                    file: req.file
+                }
+            });
+        }
+    },
     login: async (req, res, next) => {
 
         const user = await findUser(req.body.email);
