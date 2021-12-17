@@ -31,6 +31,8 @@ const upload = multer({
 // Batches Routes
 router.get('', batchesController.index);
 router.get('/:id', batchesController.detail);
-router.patch('/edit/:id/', adminWebTokenMiddleware, upload.single('image'), batchValidate, batchesController.edit);
+router.post('/create', adminWebTokenMiddleware, upload.single('image'), batchValidate, batchesController.create);
+router.patch('/edit/:id', adminWebTokenMiddleware, upload.single('image'), batchValidate, batchesController.edit);
+router.delete('/delete/:id', adminWebTokenMiddleware, batchesController.delete);
 
 module.exports = router;
