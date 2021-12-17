@@ -16,8 +16,8 @@ module.exports = [
                 where: {
                     id: req.body.category
                 }
-            });
-            if (category > 0) {
+            })
+            if (category) {
                 return true;
             } else {
                 return Promise.reject();

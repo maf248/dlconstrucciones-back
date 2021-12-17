@@ -1,4 +1,7 @@
 const db = require('../db/models');
+const {
+    validationResult
+} = require('express-validator');
 
 module.exports = {
     index: (req, res, next) => {
@@ -42,16 +45,19 @@ module.exports = {
 
         if (errors.isEmpty()) {
             db.Batch.update({
-                categories_id: req.body.category,
-                title: req.body.title,
-                description: req.body.description,
-                image: req.file.filename,
-                price: req.body.price,
-                sold: req.body.sold
-            }, {
-                where: {
-                id: {[db.Sequelize.Op.like] : [req.session.user.id]}
-            }})
+                    categories_id: req.body.category,
+                    title: req.body.title,
+                    description: req.body.description,
+                    image: req.file.filename,
+                    price: req.body.price,
+                    sold: req.body.sold
+                }, {
+                    where: {
+                        id: {
+                            [db.Sequelize.Op.like]: [req.params.id]
+                        }
+                    }
+                })
                 .then(batch => {
                     var response = {
                         meta: {
