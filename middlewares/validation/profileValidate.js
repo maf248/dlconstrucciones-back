@@ -2,7 +2,7 @@ const {
     check,
     body
 } = require('express-validator');
-const db = require('../db/models');
+const db = require('../../db/models');
 const path = require('path');
 const fs = require('fs');
 

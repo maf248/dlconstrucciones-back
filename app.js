@@ -6,7 +6,15 @@ const logger = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const indexRouter = require('./routes/index');
+// Importing Routers
+const interestsRouter = require('./routes/interests');
+const servicesRouter = require('./routes/services');
+const typesRouter = require('./routes/types');
+const jobsRouter = require('./routes/jobs');
+const batchesRouter = require('./routes/batches');
+const categoriesRouter = require('./routes/categories');
+const projectsRouter = require('./routes/projects');
+const contactRouter = require('./routes/contact');
 const usersRouter = require('./routes/users');
 
 const app = express();
@@ -22,7 +30,15 @@ app.use(cookieParser());
 
 app.use(bodyParser.json());
 
-app.use('/api', indexRouter);
+// Main Routes
+app.use('/api/interests', interestsRouter);
+app.use('/api/services', servicesRouter);
+app.use('/api/types', typesRouter);
+app.use('/api/jobs', jobsRouter);
+app.use('/api/batches', batchesRouter);
+app.use('/api/categories', categoriesRouter);
+app.use('/api/projects', projectsRouter);
+app.use('/api/contact', contactRouter);
 app.use('/api/users', usersRouter);
 
 app.use(express.static(process.cwd() + '/public/'));

@@ -6,12 +6,14 @@ const multer = require('multer');
 // Importing API Users controller
 const usersController = require('../controllers/usersController');
 
+// Importing backend validations
+const registrationValidate = require('../middlewares/validation/registrationValidate');
+const profileValidate = require('../middlewares/validation/profileValidate');
+const avatarValidate = require('../middlewares/validation/avatarValidate');
+
 // Importing middleware for protected routes
 const adminWebTokenMiddleware = require('../middlewares/adminWebTokenMiddleware');
 const selfWebTokenMiddleware = require('../middlewares/selfWebTokenMiddleware');
-const registrationValidate = require('../middlewares/registrationValidate');
-const profileValidate = require('../middlewares/profileValidate');
-const avatarValidate = require('../middlewares/avatarValidate');
 
 // ************ Multer ************
 const storage = multer.diskStorage({
