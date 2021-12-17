@@ -13,5 +13,4 @@ const adminWebTokenMiddleware = require('../middlewares/adminWebTokenMiddleware'
 // Contact Routes
 router.post('/', contactValidate, contactController.contact);
 
-
 module.exports = router;

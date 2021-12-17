@@ -15,16 +15,15 @@ const avatarValidate = require('../middlewares/validation/avatarValidate');
 const adminWebTokenMiddleware = require('../middlewares/adminWebTokenMiddleware');
 const selfWebTokenMiddleware = require('../middlewares/selfWebTokenMiddleware');
 
-// ************ Multer ************
+// Multer
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        // ************ Funcion p/ Obtener el product ID y luego utilizarlo con multer ************
         let dirImage = path.join('public', 'images', 'users')
      return cb(null, dirImage);
     },
     filename: function(req, file, cb) {
            
-     return cb(null, 'Usuario-' + '_' + Date.now() + path.extname(file.originalname));
+     return cb(null, 'Usuario' + '_' + Date.now() + path.extname(file.originalname));
     },
 });
 

@@ -45,7 +45,7 @@ module.exports = {
                 categories_id: req.body.category,
                 title: req.body.title,
                 description: req.body.description,
-                image:  bcryptjs.hashSync(req.body.password, 10),
+                image: req.file.filename,
                 price: req.body.price,
                 sold: req.body.sold
             }, {
