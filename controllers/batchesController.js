@@ -111,7 +111,6 @@ module.exports = {
         }
     },
     delete: (req, res, next) => {
-        console.log(req.params.id)
         db.Batch.destroy({
                 where: {
                     id: {
