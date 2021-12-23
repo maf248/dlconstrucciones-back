@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BIGINT.UNSIGNED,
             allowNull: false
         },
+        cronoflow: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         created_at: {
             type: DataTypes.DATE,
             allowNull: false
