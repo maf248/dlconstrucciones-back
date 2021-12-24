@@ -1,31 +1,33 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const path = require('path');
-const multer = require('multer');
+const path = require("path");
+const multer = require("multer");
 
 // Importing API controllers
-const categoriesController = require('../controllers/categoriesController');
+const categoriesController = require("../controllers/categoriesController");
 
 // Importing middleware for protected routes
-const adminWebTokenMiddleware = require('../middlewares/adminWebTokenMiddleware');
+const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
 
 // Importing backend validations
-const categoryValidate = require('../middlewares/validation/categoryValidate');
+const categoryValidate = require("../middlewares/validation/categoryValidate");
 
 // Multer
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        let dirImage = path.join('public', 'images')
-        return cb(null, dirImage);
-    },
-    filename: function (req, file, cb) {
-
-        return cb(null, 'Category' + '_' + Date.now() + path.extname(file.originalname));
-    },
+  destination: function (req, file, cb) {
+    let dirImage = path.join("public", "images");
+    return cb(null, dirImage);
+  },
+  filename: function (req, file, cb) {
+    return cb(
+      null,
+      "Category" + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
 });
 
 const upload = multer({
-    storage: storage
+  storage: storage,
 });
 
 // Categories Routes

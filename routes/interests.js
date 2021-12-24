@@ -1,31 +1,33 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const path = require('path');
-const multer = require('multer');
+const path = require("path");
+const multer = require("multer");
 
 // Importing API controllers
-const interestsController = require('../controllers/interestsController');
+const interestsController = require("../controllers/interestsController");
 
 // Importing middleware for protected routes
-const adminWebTokenMiddleware = require('../middlewares/adminWebTokenMiddleware');
+const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
 
 // Importing backend validations
-const interestValidate = require('../middlewares/validation/interestValidate');
+const interestValidate = require("../middlewares/validation/interestValidate");
 
 // Multer
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        let dirImage = path.join('public', 'images')
-        return cb(null, dirImage);
-    },
-    filename: function (req, file, cb) {
-
-        return cb(null, 'Interes' + '_' + Date.now() + path.extname(file.originalname));
-    },
+  destination: function (req, file, cb) {
+    let dirImage = path.join("public", "images");
+    return cb(null, dirImage);
+  },
+  filename: function (req, file, cb) {
+    return cb(
+      null,
+      "Interes" + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
 });
 
 const upload = multer({
-    storage: storage
+  storage: storage,
 });
 
 // Interests Routes

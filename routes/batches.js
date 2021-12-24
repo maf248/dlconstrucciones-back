@@ -1,31 +1,33 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const path = require('path');
-const multer = require('multer');
+const path = require("path");
+const multer = require("multer");
 
 // Importing API controllers
-const batchesController = require('../controllers/batchesController');
+const batchesController = require("../controllers/batchesController");
 
 // Importing middleware for protected routes
-const adminWebTokenMiddleware = require('../middlewares/adminWebTokenMiddleware');
+const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
 
 // Importing backend validations
-const batchValidate = require('../middlewares/validation/batchValidate');
+const batchValidate = require("../middlewares/validation/batchValidate");
 
 // Multer
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        let dirImage = path.join('public', 'images')
-        return cb(null, dirImage);
-    },
-    filename: function (req, file, cb) {
-
-        return cb(null, 'Lote' + '_' + Date.now() + path.extname(file.originalname));
-    },
+  destination: function (req, file, cb) {
+    let dirImage = path.join("public", "images");
+    return cb(null, dirImage);
+  },
+  filename: function (req, file, cb) {
+    return cb(
+      null,
+      "Lote" + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
 });
 
 const upload = multer({
-    storage: storage
+  storage: storage,
 });
 
 // Batches Routes

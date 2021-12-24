@@ -11,6 +11,7 @@ module.exports = [
     })
     .withMessage('El titulo debe contener al menos 3 carateres'),
     check('image')
+    .optional()
     .custom((value, {
         req
     }) => {

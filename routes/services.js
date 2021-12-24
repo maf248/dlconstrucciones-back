@@ -1,31 +1,33 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const path = require('path');
-const multer = require('multer');
+const path = require("path");
+const multer = require("multer");
 
 // Importing API controllers
-const servicesController = require('../controllers/servicesController');
+const servicesController = require("../controllers/servicesController");
 
 // Importing middleware for protected routes
-const adminWebTokenMiddleware = require('../middlewares/adminWebTokenMiddleware');
+const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
 
 // Importing backend validations
-const serviceValidate = require('../middlewares/validation/serviceValidate');
+const serviceValidate = require("../middlewares/validation/serviceValidate");
 
 // Multer
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        let dirImage = path.join('public', 'images')
-        return cb(null, dirImage);
-    },
-    filename: function (req, file, cb) {
-
-        return cb(null, 'Servicio' + '_' + Date.now() + path.extname(file.originalname));
-    },
+  destination: function (req, file, cb) {
+    let dirImage = path.join("public", "images");
+    return cb(null, dirImage);
+  },
+  filename: function (req, file, cb) {
+    return cb(
+      null,
+      "Servicio" + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
 });
 
 const upload = multer({
-    storage: storage
+  storage: storage,
 });
 
 // Services Routes
