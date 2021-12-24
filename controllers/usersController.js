@@ -22,7 +22,10 @@ async function findUser(email) {
         user = await db.User.findOne({
             where: {
                 email: email
-            }
+            },
+            include: [{
+                association: "Projects"
+            }]
         })
         return user;
     } catch (error) {
@@ -251,10 +254,6 @@ module.exports = {
 
         let errors = validationResult(req);
 
-        console.log(req.selfHashId);
-        console.log(errors.errors);
-        console.log(req.file.filename);
-
         if (errors.isEmpty()) {
 
             db.User.update({
@@ -272,7 +271,7 @@ module.exports = {
                         })
                         .then((user) => {
                             user.password = undefined;
-                            
+
                             var response = {
                                 meta: {
                                     status: 200,
@@ -404,7 +403,10 @@ module.exports = {
             db.User.findOne({
                     where: {
                         hash_id: req.selfHashId
-                    }
+                    },
+                    include: [{
+                        association: "Projects"
+                    }]
                 })
                 .then(user => {
                     user.password = undefined;
