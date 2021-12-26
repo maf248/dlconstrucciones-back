@@ -18,12 +18,19 @@ module.exports = {
   detail: (req, res, next) => {
     db.Interest.findByPk(req.params.id)
       .then((interest) => {
-        var response = {
-          meta: {
-            status: 200,
-          },
-          data: interest,
-        };
+        var response = interest
+          ? {
+              meta: {
+                status: 200,
+              },
+              data: interest,
+            }
+          : {
+              meta: {
+                status: 404,
+              },
+              data: interest,
+            };
         res.json(response);
       })
       .catch((err) => console.log(err));
@@ -47,15 +54,31 @@ module.exports = {
         }
       )
         .then((interest) => {
-          if (interest) {
-            res.redirect(`/api/interests/${req.params.id}`);
+          if (interest[0]) {
+            return res.json({
+              meta: {
+                status: 200,
+              },
+              data: {
+                message: "Editado correctamente",
+              },
+            });
+          } else {
+            return res.json({
+              meta: {
+                status: 404,
+              },
+              data: {
+                message: "Id invalido",
+              },
+            });
           }
         })
         .catch((err) => console.log(err));
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -85,7 +108,7 @@ module.exports = {
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -113,7 +136,7 @@ module.exports = {
         } else {
           return res.json({
             meta: {
-              status: 409,
+              status: 406,
             },
             data: `Could not delete interest id: ${req.params.id}`,
           });

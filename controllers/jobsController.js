@@ -17,13 +17,20 @@ module.exports = {
   },
   detail: (req, res, next) => {
     db.Job.findByPk(req.params.id)
-      .then((jobs) => {
-        var response = {
-          meta: {
-            status: 200,
-          },
-          data: jobs,
-        };
+      .then((job) => {
+        var response = job
+          ? {
+              meta: {
+                status: 200,
+              },
+              data: job,
+            }
+          : {
+              meta: {
+                status: 404,
+              },
+              data: job,
+            };
         res.json(response);
       })
       .catch((err) => console.log(err));
@@ -48,15 +55,31 @@ module.exports = {
         }
       )
         .then((job) => {
-          if (job) {
-            res.redirect(`/api/jobs/${req.params.id}`);
+          if (job[0]) {
+            return res.json({
+              meta: {
+                status: 200,
+              },
+              data: {
+                message: "Editado correctamente",
+              },
+            });
+          } else {
+            return res.json({
+              meta: {
+                status: 406,
+              },
+              data: {
+                message: "Id invalido",
+              },
+            });
           }
         })
         .catch((err) => console.log(err));
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -87,7 +110,7 @@ module.exports = {
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -115,7 +138,7 @@ module.exports = {
         } else {
           return res.json({
             meta: {
-              status: 409,
+              status: 406,
             },
             data: `Could not delete job id: ${req.params.id}`,
           });

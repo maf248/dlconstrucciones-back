@@ -23,13 +23,20 @@ module.exports = {
         },
       ],
     })
-      .then((jobs) => {
-        var response = {
-          meta: {
-            status: 200,
-          },
-          data: jobs,
-        };
+      .then((type) => {
+        var response = type
+          ? {
+              meta: {
+                status: 200,
+              },
+              data: type,
+            }
+          : {
+              meta: {
+                status: 404,
+              },
+              data: type,
+            };
         res.json(response);
       })
       .catch((err) => console.log(err));
@@ -52,15 +59,31 @@ module.exports = {
         }
       )
         .then((type) => {
-          if (type) {
-            res.redirect(`/api/types/${req.params.id}`);
+          if (type[0]) {
+            return res.json({
+              meta: {
+                status: 200,
+              },
+              data: {
+                message: "Editado correctamente",
+              },
+            });
+          } else {
+            return res.json({
+              meta: {
+                status: 406,
+              },
+              data: {
+                message: "Id invalido",
+              },
+            });
           }
         })
         .catch((err) => console.log(err));
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -89,7 +112,7 @@ module.exports = {
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -117,7 +140,7 @@ module.exports = {
         } else {
           return res.json({
             meta: {
-              status: 409,
+              status: 406,
             },
             data: `Could not delete type id: ${req.params.id}`,
           });

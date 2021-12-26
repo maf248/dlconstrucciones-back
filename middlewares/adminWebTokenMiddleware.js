@@ -23,14 +23,13 @@ function adminWebTokenMiddleware(req, res, next) {
         });
       } else {
         req.decoded = decoded;
-        console.log(decoded);
-        console.log(`User role: ${decoded.role}`);
+        
         if (decoded.role === "admin" || decoded.role === "master") {
           next();
         } else {
           return res.json({
             meta: {
-              status: 401,
+              status: 403,
             },
             data: {
               message: "Token restringida",
@@ -45,7 +44,7 @@ function adminWebTokenMiddleware(req, res, next) {
         status: 401,
       },
       data: {
-        message: "Token no proveída.",
+        message: "Token no proveída",
       },
     });
   }

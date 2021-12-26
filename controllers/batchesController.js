@@ -24,12 +24,19 @@ module.exports = {
       ],
     })
       .then((batch) => {
-        var response = {
-          meta: {
-            status: 200,
-          },
-          data: batch,
-        };
+        var response = batch
+          ? {
+              meta: {
+                status: 200,
+              },
+              data: batch,
+            }
+          : {
+              meta: {
+                status: 404,
+              },
+              data: batch,
+            };
         res.json(response);
       })
       .catch((err) => console.log(err));
@@ -56,15 +63,32 @@ module.exports = {
         }
       )
         .then((batch) => {
-          if (batch) {
-            res.redirect(`/api/batches/${req.params.id}`);
+          console.log(batch);
+          if (batch[0]) {
+            return res.json({
+              meta: {
+                status: 200,
+              },
+              data: {
+                message: "Editado correctamente",
+              },
+            });
+          } else {
+            return res.json({
+              meta: {
+                status: 404,
+              },
+              data: {
+                message: "Id invalido",
+              },
+            });
           }
         })
         .catch((err) => console.log(err));
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -97,7 +121,7 @@ module.exports = {
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -125,7 +149,7 @@ module.exports = {
         } else {
           return res.json({
             meta: {
-              status: 409,
+              status: 406,
             },
             data: `Could not delete batch id: ${req.params.id}`,
           });

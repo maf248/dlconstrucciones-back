@@ -23,13 +23,20 @@ module.exports = {
         },
       ],
     })
-      .then((batch) => {
-        var response = {
-          meta: {
-            status: 200,
-          },
-          data: batch,
-        };
+      .then((category) => {
+        var response = category
+          ? {
+              meta: {
+                status: 200,
+              },
+              data: category,
+            }
+          : {
+              meta: {
+                status: 404,
+              },
+              data: category,
+            };
         res.json(response);
       })
       .catch((err) => console.log(err));
@@ -52,15 +59,31 @@ module.exports = {
         }
       )
         .then((category) => {
-          if (category) {
-            res.redirect(`/api/categories/${req.params.id}`);
+          if (category[0]) {
+            return res.json({
+              meta: {
+                status: 200,
+              },
+              data: {
+                message: "Editado correctamente",
+              },
+            });
+          } else {
+            return res.json({
+              meta: {
+                status: 404,
+              },
+              data: {
+                message: "Id invalido",
+              },
+            });
           }
         })
         .catch((err) => console.log(err));
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -89,7 +112,7 @@ module.exports = {
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -117,7 +140,7 @@ module.exports = {
         } else {
           return res.json({
             meta: {
-              status: 409,
+              status: 406,
             },
             data: `Could not delete category id: ${req.params.id}`,
           });

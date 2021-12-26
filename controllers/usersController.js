@@ -66,13 +66,20 @@ module.exports = {
         },
       ],
     })
-      .then((users) => {
-        var response = {
-          meta: {
-            status: 200,
-          },
-          data: [users],
-        };
+      .then((user) => {
+        var response = user
+          ? {
+              meta: {
+                status: 200,
+              },
+              data: [user],
+            }
+          : {
+              meta: {
+                status: 404,
+              },
+              data: user,
+            };
         res.json(response);
       })
       .catch((err) => console.log(err));

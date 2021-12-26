@@ -30,12 +30,19 @@ module.exports = {
       ],
     })
       .then((project) => {
-        var response = {
-          meta: {
-            status: 200,
-          },
-          data: project,
-        };
+        var response = project
+          ? {
+              meta: {
+                status: 200,
+              },
+              data: project,
+            }
+          : {
+              meta: {
+                status: 404,
+              },
+              data: project,
+            };
         res.json(response);
       })
       .catch((err) => console.log(err));
@@ -59,15 +66,31 @@ module.exports = {
         }
       )
         .then((project) => {
-          if (project) {
-            res.redirect(`/api/projects/${req.params.id}`);
+          if (project[0]) {
+            return res.json({
+              meta: {
+                status: 200,
+              },
+              data: {
+                message: "Editado correctamente",
+              },
+            });
+          } else {
+            return res.json({
+              meta: {
+                status: 406,
+              },
+              data: {
+                message: "Id invalido",
+              },
+            });
           }
         })
         .catch((err) => console.log(err));
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -97,7 +120,7 @@ module.exports = {
     } else {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
@@ -125,7 +148,7 @@ module.exports = {
         } else {
           return res.json({
             meta: {
-              status: 409,
+              status: 406,
             },
             data: `Could not delete project id: ${req.params.id}`,
           });

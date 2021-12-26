@@ -8,7 +8,7 @@ module.exports = {
     if (!errors.isEmpty()) {
       return res.json({
         meta: {
-          status: 401,
+          status: 400,
         },
         data: {
           errors: errors.errors,
