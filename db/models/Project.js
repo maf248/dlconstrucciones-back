@@ -6,11 +6,19 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       allowNull: false,
     },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+     total: {
+      type: DataTypes.BIGINT.UNSIGNED,
+      allowNull: false,
+    },
     balance: {
       type: DataTypes.BIGINT.UNSIGNED,
       allowNull: false,
     },
-    cronoflow: {
+    cashflow: {
       type: DataTypes.STRING,
       allowNull: false,
     },

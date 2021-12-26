@@ -22,6 +22,16 @@ module.exports = [
       }
     })
     .withMessage("El ID de usuario debe ser numerico y existir"),
+  check("title")
+    .isLength({
+      min: 3,
+    })
+    .optional()
+    .withMessage("El titulo debe contener al menos 3 carateres"),
+  check("total")
+    .isNumeric()
+    .isInt({ gt: -1 })
+    .withMessage("El total debe ser mayor a 0"),
   check("balance")
     .isNumeric()
     .isInt({ gt: -1 })

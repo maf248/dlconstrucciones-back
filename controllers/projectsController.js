@@ -54,8 +54,10 @@ module.exports = {
       db.Project.update(
         {
           users_id: req.body.user,
+          title: req.body.title,
+          total: req.body.total,
           balance: req.body.balance,
-          cronoflow: req.file.filename,
+          cashflow: req.file.filename,
         },
         {
           where: {
@@ -105,8 +107,10 @@ module.exports = {
     if (errors.isEmpty()) {
       db.Project.create({
         users_id: req.body.user,
-        balance: req.body.balance,
-        cronoflow: req.file.filename,
+          title: req.body.title,
+          total: req.body.total,
+          balance: req.body.balance,
+          cashflow: req.file.filename,
       })
         .then((project) => {
           return res.json({
