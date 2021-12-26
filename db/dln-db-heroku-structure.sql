@@ -184,8 +184,10 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `heroku_d90f346a378032b`.`projects` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `users_id` BIGINT UNSIGNED NOT NULL,
+  `title` VARCHAR(100) NULL DEFAULT NULL,
+  `total` BIGINT UNSIGNED NOT NULL,
   `balance` BIGINT UNSIGNED NOT NULL,
-  `cronoflow` VARCHAR(100) NOT NULL,
+  `cashflow` VARCHAR(100) NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
@@ -215,6 +217,25 @@ CREATE TABLE IF NOT EXISTS `heroku_d90f346a378032b`.`contents` (
   CONSTRAINT `services_contents`
     FOREIGN KEY (`services_a_id`)
     REFERENCES `heroku_d90f346a378032b`.`services` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `heroku_d90f346a378032b`.`payments`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `heroku_d90f346a378032b`.`payments` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `projects_id` BIGINT UNSIGNED NOT NULL,
+  `amount` BIGINT UNSIGNED NOT NULL,
+  `receipt` BIGINT NULL DEFAULT NULL,
+  `datetime` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `projects_payments_idx` (`projects_id` ASC),
+  CONSTRAINT `projects_payments`
+    FOREIGN KEY (`projects_id`)
+    REFERENCES `heroku_d90f346a378032b`.`projects` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
