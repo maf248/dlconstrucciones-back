@@ -26,6 +26,11 @@ async function findUser(email) {
       include: [
         {
           association: "Projects",
+          include: [
+            {
+              association: "Payments",
+            },
+          ],
         },
       ],
     });
@@ -344,6 +349,16 @@ module.exports = {
             where: {
               hash_id: req.selfHashId,
             },
+            include: [
+              {
+                association: "Projects",
+                include: [
+                  {
+                    association: "Payments",
+                  },
+                ],
+              },
+            ],
           })
             .then((user) => {
               user.password = undefined;
