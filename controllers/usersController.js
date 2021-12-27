@@ -108,6 +108,16 @@ module.exports = {
             where: {
               hash_id: req.selfHashId,
             },
+            include: [
+              {
+                association: "Projects",
+                include: [
+                  {
+                    association: "Payments",
+                  },
+                ],
+              },
+            ],
           })
             .then((user) => {
               var response = {
@@ -149,6 +159,16 @@ module.exports = {
             where: {
               hash_id: req.selfHashId,
             },
+            include: [
+              {
+                association: "Projects",
+                include: [
+                  {
+                    association: "Payments",
+                  },
+                ],
+              },
+            ],
           })
             .then((user) => {
               var response = {
@@ -192,6 +212,16 @@ module.exports = {
             where: {
               hash_id: req.selfHashId,
             },
+            include: [
+              {
+                association: "Projects",
+                include: [
+                  {
+                    association: "Payments",
+                  },
+                ],
+              },
+            ],
           })
             .then((user) => {
               var response = {
@@ -239,6 +269,16 @@ module.exports = {
                   where: {
                     hash_id: req.selfHashId,
                   },
+                  include: [
+                    {
+                      association: "Projects",
+                      include: [
+                        {
+                          association: "Payments",
+                        },
+                      ],
+                    },
+                  ],
                 })
                   .then((user) => {
                     var response = {
