@@ -324,4 +324,5 @@ INSERT INTO projects (users_id, total, balance, cashflow) VALUES
 (2,2500,1000,'cronoejemplo2');
 
 INSERT INTO payments (projects_id, amount, receipt, datetime) VALUES
-(1,100,092384023948230948,'2020-01-01 10:10:10');
+(1,100,092384023948230948,'2020-01-01 10:10:10'),
+(2,300,092384023934534550,'2020-01-01 10:10:10');

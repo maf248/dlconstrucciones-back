@@ -36,7 +36,7 @@ module.exports = [
     .isNumeric()
     .isInt({ gt: -1 })
     .withMessage("El balance debe ser mayor a 0"),
-  check("cronoflow")
+  check("cashflow")
     .custom((value, { req }) => {
       switch (req.file.mimetype) {
         case "application/vnd.ms-excel":

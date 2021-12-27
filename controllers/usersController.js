@@ -436,6 +436,11 @@ module.exports = {
         include: [
           {
             association: "Projects",
+            include: [
+              {
+                association: "Payments",
+              },
+            ],
           },
         ],
       })

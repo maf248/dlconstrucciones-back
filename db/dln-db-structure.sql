@@ -229,8 +229,11 @@ CREATE TABLE IF NOT EXISTS `dln-construcciones`.`payments` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `projects_id` BIGINT UNSIGNED NOT NULL,
   `amount` BIGINT UNSIGNED NOT NULL,
-  `receipt` BIGINT NULL DEFAULT NULL,
+  `receipt` BIGINT UNSIGNED NULL DEFAULT NULL,
   `datetime` DATETIME NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
+  `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `projects_payments_idx` (`projects_id` ASC),
   CONSTRAINT `projects_payments`
