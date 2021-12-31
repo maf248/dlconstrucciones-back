@@ -522,4 +522,51 @@ module.exports = {
       });
     }
   },
+  delete: (req, res, next) => {
+    db.User.findOne({
+      where: {
+        hash_id: req.selfHashId,
+      },
+    })
+      .then((user) => {
+        if (Number(user.id) !== Number(req.params.id)) {
+          db.User.destroy({
+            where: {
+              id: {
+                [db.Sequelize.Op.like]: [req.params.id],
+              },
+            },
+          })
+            .then((x) => {
+              console.log(x);
+              if (x) {
+                return res.json({
+                  meta: {
+                    status: 200,
+                  },
+                  data: `Successfully deleted user id: ${req.params.id}`,
+                });
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: `Could not delete user id: ${req.params.id}`,
+                });
+              }
+            })
+            .catch((err) => console.log(err));
+        } else {
+          return res.json({
+            meta: {
+              status: 406,
+            },
+            data: `Could not delete self id: ${req.params.id}`,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
 };

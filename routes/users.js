@@ -12,6 +12,7 @@ const profileValidate = require("../middlewares/validation/profileValidate");
 const avatarValidate = require("../middlewares/validation/avatarValidate");
 
 // Importing middleware for protected routes
+const masterWebTokenMiddleware = require("../middlewares/masterWebTokenMiddleware");
 const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
 const selfWebTokenMiddleware = require("../middlewares/selfWebTokenMiddleware");
 
@@ -37,6 +38,7 @@ router.post('/avatar', selfWebTokenMiddleware, upload.single('avatar'), avatarVa
 router.post('/identify', selfWebTokenMiddleware, usersController.identify);
 router.post('/login', usersController.login);
 router.post('/register', registrationValidate, usersController.register);
+router.delete('/delete/:id', masterWebTokenMiddleware, selfWebTokenMiddleware, usersController.delete);
 router.get('/', adminWebTokenMiddleware, usersController.list);
 router.get('/:id', adminWebTokenMiddleware, usersController.detail);
 
