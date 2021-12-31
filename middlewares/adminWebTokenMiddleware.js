@@ -23,7 +23,7 @@ function adminWebTokenMiddleware(req, res, next) {
         });
       } else {
         req.decoded = decoded;
-        
+
         if (decoded.role === "admin" || decoded.role === "master") {
           next();
         } else {

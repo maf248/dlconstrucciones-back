@@ -569,4 +569,73 @@ module.exports = {
         console.log(err);
       });
   },
+  role: (req, res, next) => {
+    let errors = validationResult(req);
+
+    if (errors.isEmpty()) {
+      db.User.findOne({
+        where: {
+          hash_id: req.selfHashId,
+        },
+      })
+        .then((user) => {
+          if (Number(user.id) !== Number(req.params.id)) {
+            db.User.update(
+              {
+                role: req.body.role,
+              },
+              {
+                where: {
+                  id: {
+                    [db.Sequelize.Op.like]: [req.params.id],
+                  },
+                },
+              }
+            )
+              .then((user) => {
+                if (user[0]) {
+                  return res.json({
+                    meta: {
+                      status: 200,
+                    },
+                    data: {
+                      message: "Editado correctamente",
+                    },
+                  });
+                } else {
+                  return res.json({
+                    meta: {
+                      status: 406,
+                    },
+                    data: {
+                      message: "Id invalido",
+                    },
+                  });
+                }
+              })
+              .catch((err) => console.log(err));
+          } else {
+            return res.json({
+              meta: {
+                status: 406,
+              },
+              data: `Could not edit self role for id: ${req.params.id}`,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      return res.json({
+        meta: {
+          status: 400,
+        },
+        data: {
+          errors: errors.errors,
+          body: req.body,
+        },
+      });
+    }
+  },
 };
