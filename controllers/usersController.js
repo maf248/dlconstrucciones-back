@@ -30,6 +30,9 @@ async function findUser(email) {
             {
               association: "Payments",
             },
+            {
+              association: "Assets",
+            },
           ],
         },
       ],
@@ -120,6 +123,9 @@ module.exports = {
                   {
                     association: "Payments",
                   },
+                  {
+                    association: "Assets",
+                  },
                 ],
               },
             ],
@@ -170,6 +176,9 @@ module.exports = {
                 include: [
                   {
                     association: "Payments",
+                  },
+                  {
+                    association: "Assets",
                   },
                 ],
               },
@@ -223,6 +232,9 @@ module.exports = {
                 include: [
                   {
                     association: "Payments",
+                  },
+                  {
+                    association: "Assets",
                   },
                 ],
               },
@@ -280,6 +292,9 @@ module.exports = {
                       include: [
                         {
                           association: "Payments",
+                        },
+                        {
+                          association: "Assets",
                         },
                       ],
                     },
@@ -355,6 +370,9 @@ module.exports = {
                 include: [
                   {
                     association: "Payments",
+                  },
+                  {
+                    association: "Assets",
                   },
                 ],
               },
@@ -494,6 +512,9 @@ module.exports = {
             include: [
               {
                 association: "Payments",
+              },
+              {
+                association: "Assets",
               },
             ],
           },

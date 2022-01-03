@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
-     total: {
+    total: {
       type: DataTypes.BIGINT.UNSIGNED,
       allowNull: false,
     },
@@ -50,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
     });
     Project.hasMany(models.Payment, {
       as: "Payments",
+      foreignKey: "projects_id",
+    });
+    Project.hasMany(models.Asset, {
+      as: "Assets",
       foreignKey: "projects_id",
     });
   };

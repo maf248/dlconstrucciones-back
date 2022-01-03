@@ -25,8 +25,10 @@ module.exports = {
     db.Project.findByPk(req.params.id, {
       include: [
         {
-          association: "Users",
           association: "Payments",
+        },
+        {
+          association: "Assets",
         },
       ],
     })
