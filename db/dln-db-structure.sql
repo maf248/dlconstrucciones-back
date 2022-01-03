@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `dln-construcciones`.`users` (
   `avatar` VARCHAR(100) NULL DEFAULT NULL,
   `dni` INT UNSIGNED NULL DEFAULT NULL,
   `phone` VARCHAR(45) NULL DEFAULT NULL,
-  `role` ENUM('master','admin', 'user') NOT NULL DEFAULT 'user',
+  `role` ENUM('master', 'admin', 'user') NULL DEFAULT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
@@ -212,8 +212,8 @@ CREATE TABLE IF NOT EXISTS `dln-construcciones`.`contents` (
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
   INDEX `services_contents_idx` (`services_a_id` ASC),
+  PRIMARY KEY (`id`),
   CONSTRAINT `services_contents`
     FOREIGN KEY (`services_a_id`)
     REFERENCES `dln-construcciones`.`services` (`id`)
@@ -237,6 +237,27 @@ CREATE TABLE IF NOT EXISTS `dln-construcciones`.`payments` (
   PRIMARY KEY (`id`),
   INDEX `projects_payments_idx` (`projects_id` ASC),
   CONSTRAINT `projects_payments`
+    FOREIGN KEY (`projects_id`)
+    REFERENCES `dln-construcciones`.`projects` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `dln-construcciones`.`assets`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `dln-construcciones`.`assets` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `projects_id` BIGINT UNSIGNED NOT NULL,
+  `asset` VARCHAR(100) NOT NULL,
+  `type` ENUM('video', 'image') NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
+  `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
+  `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+  INDEX `projects_assets_idx` (`projects_id` ASC),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `projects_assets`
     FOREIGN KEY (`projects_id`)
     REFERENCES `dln-construcciones`.`projects` (`id`)
     ON DELETE NO ACTION
