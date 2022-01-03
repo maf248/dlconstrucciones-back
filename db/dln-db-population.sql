@@ -84,8 +84,7 @@ INSERT INTO jobs (types_id, image) VALUES
 (2,'WhatsApp-Image-2019-01-31-at-20.29.52-2-.jpeg');
 
 INSERT INTO categories (title, image) VALUES
-('Costa Esmeralda','costa-esmeralda.jfif'),
-('Campo', 'campo.png');
+('Costa Esmeralda','costa-esmeralda.jfif');
 
 INSERT INTO batches (categories_id, title, price, sold, description, image) VALUES
 (1,'Ecuestre - Lote 229',28500,'false','Lote en el exclusivo balneario Costa Esmeralda, ubicado a 10km de Pinamar (Ruta 11, km 380).
