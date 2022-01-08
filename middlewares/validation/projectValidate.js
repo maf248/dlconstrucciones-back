@@ -28,13 +28,20 @@ module.exports = [
     })
     .optional()
     .withMessage("El titulo debe contener al menos 3 carateres"),
+    check("description")
+    .isLength({
+      min: 10,
+    })
+    .optional()
+    .withMessage("La descripción debe contener al menos 10 carateres"),
   check("total")
     .isNumeric()
     .isInt({ gt: -1 })
-    .withMessage("El total debe ser mayor a 0"),
+    .withMessage("El total debe ser numerico y mayor a 0"),
   check("balance")
     .isNumeric()
     .isInt({ gt: -1 })
+    .optional()
     .withMessage("El balance debe ser mayor a 0"),
   check("cashflow")
     .custom((value, { req }) => {
@@ -47,5 +54,6 @@ module.exports = [
           return false;
       }
     })
+    .optional()
     .withMessage("El archivo debe tener formato excel: xls o xlsx"),
 ];

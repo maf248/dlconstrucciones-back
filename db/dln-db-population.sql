@@ -301,8 +301,7 @@ INSERT INTO images (batches_id, image) VALUES
 (13, 'venta-lote-terreno-D-NQ-NP-473615-MLA25291290120-012017-F.jpg');
 
 INSERT INTO contents (services_a_id, subtitle, text) VALUES
-(1,'Adquisición de lotes','
-Te asesoramos en la compra del terreno que mejor se adapte a tu proyecto, tomando en cuenta presupuesto, ubicación, nivel del lote y aquellos detalles que pueden pasar inadvertidos para el ojo inexperto.'),
+(1,'Adquisición de lotes','Te asesoramos en la compra del terreno que mejor se adapte a tu proyecto, tomando en cuenta presupuesto, ubicación, nivel del lote y aquellos detalles que pueden pasar inadvertidos para el ojo inexperto.'),
 (1,'Proyecto de obra','Estamos con vos en cada etapa, desde la idea original hasta el día en que ingreses por primera vez a tu casa terminada. Podemos guiarte en el proceso de diseño y desarrollo de un espacio que se adapte a tus características familiares y a tu estilo de vida.'),
 (1,'Ejecucion','Contamos con una completa gama de profesionales de la construcción, bien establecidos y de amplia experiencia. Nos ocupamos de todos los detalles, desde la construcción más tradicional hasta desarrollos eco-sustentables y tecnología domótica.'),
 (1,'Direccion de obra','Desde el primer día vas a estar al tanto de los adelantos y el control de tu obra, con "updates"  semanales a través de tu e-mail o de Whatsapp.'),
@@ -318,13 +317,13 @@ INSERT INTO users (hash_id, first_name, last_name, email, password, avatar, dni,
 ('$2a$10$1EHxHf5rQ.gyJ2xnJ55sFeHVnMlxbXReGoaFC1ID/dhumC8mGG8Ii','Tobias','Blaksley','tobias.blaksley@hotmail.com','$2a$10$nY9qIx.MJ4cXVG5csGpFFeQzQl4J2h0zhT.VndbdlnZOGzYjdbcmW','Usuario-1_1610562779647.jfif',NULL,'master'),
 ('$2a$10$qpbUssE9j0VlJYCAlUeDweZLwvsKpHYOM9aJ7TjAAGyBLH.5xmmbu','Marcelo','Fanego','mafmaggot@gmail.com','$2a$10$MHA8vyzxjf4h8rg.WVSPEeXvh9ZX5Uv/a9s58zz70WrnOQdkNLMhW','Usuario-4_1611071905072.png',35960622,'admin');
 
-INSERT INTO projects (users_id, total, balance, cashflow) VALUES
-(1,1500,0,'cronoejemplo1'),
-(2,2500,1000,'cronoejemplo2');
+INSERT INTO projects (users_id, total, description, cashflow) VALUES
+(1,1500,'Este es un proyecto con descripción','cronoejemplo1'),
+(2,2500,'Descripción de prueba',NULL);
 
 INSERT INTO payments (projects_id, amount, receipt, datetime) VALUES
-(1,100,092384023948230948,'2020-01-01 10:10:10'),
-(2,300,092384023934534550,'2020-01-01 10:10:10');
+(1,100,'092384023948230948','2020-01-01 10:10:10'),
+(2,300,'BA2384023934534550','2020-01-01 10:10:10');
 
 INSERT INTO assets (projects_id, asset, type) VALUES
 (1,'imagenejemplo.png','image'),

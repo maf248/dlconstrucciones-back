@@ -123,6 +123,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `dln-construcciones`.`users` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `hash_id` VARCHAR(100) NOT NULL,
+  `validation` VARCHAR(100) NULL DEFAULT NULL,
   `email` VARCHAR(100) NOT NULL,
   `password` VARCHAR(100) NOT NULL,
   `first_name` VARCHAR(100) NOT NULL,
@@ -134,7 +135,9 @@ CREATE TABLE IF NOT EXISTS `dln-construcciones`.`users` (
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `hash_id_UNIQUE` (`hash_id` ASC),
+  UNIQUE INDEX `validation_UNIQUE` (`validation` ASC))
 ENGINE = InnoDB;
 
 
@@ -185,9 +188,10 @@ CREATE TABLE IF NOT EXISTS `dln-construcciones`.`projects` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `users_id` BIGINT UNSIGNED NOT NULL,
   `title` VARCHAR(100) NULL DEFAULT NULL,
+  `description` TEXT NULL DEFAULT NULL,
   `total` BIGINT UNSIGNED NOT NULL,
-  `balance` BIGINT UNSIGNED NOT NULL,
-  `cashflow` VARCHAR(100) NOT NULL,
+  `balance` BIGINT UNSIGNED NULL DEFAULT NULL,
+  `cashflow` VARCHAR(100) NULL DEFAULT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
@@ -229,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `dln-construcciones`.`payments` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `projects_id` BIGINT UNSIGNED NOT NULL,
   `amount` BIGINT UNSIGNED NOT NULL,
-  `receipt` BIGINT UNSIGNED NULL DEFAULT NULL,
+  `receipt` VARCHAR(100) NULL DEFAULT NULL,
   `datetime` DATETIME NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     receipt: {
-      type: DataTypes.BIGINT.UNSIGNED,
+      type: DataTypes.STRING,
       allowNull: true,
     },
     datetime: {

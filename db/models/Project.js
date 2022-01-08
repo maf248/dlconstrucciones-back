@@ -10,17 +10,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     total: {
       type: DataTypes.BIGINT.UNSIGNED,
       allowNull: false,
     },
     balance: {
       type: DataTypes.BIGINT.UNSIGNED,
-      allowNull: false,
+      allowNull: true,
     },
     cashflow: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     created_at: {
       type: DataTypes.DATE,

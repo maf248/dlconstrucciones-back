@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
+    validation: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+    },
     first_name: {
       type: DataTypes.STRING,
       allowNull: false,

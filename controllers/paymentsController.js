@@ -2,66 +2,15 @@ const db = require("../db/models");
 const { validationResult } = require("express-validator");
 
 module.exports = {
-  index: (req, res, next) => {
-    db.Project.findAll({
-      include: [
-        {
-          association: "Users",
-        },
-      ],
-    })
-      .then((projects) => {
-        var response = {
-          meta: {
-            status: 200,
-          },
-          data: [...projects],
-        };
-        res.json(response);
-      })
-      .catch((err) => console.log(err));
-  },
-  detail: (req, res, next) => {
-    db.Project.findByPk(req.params.id, {
-      include: [
-        {
-          association: "Payments",
-        },
-        {
-          association: "Assets",
-        },
-      ],
-    })
-      .then((project) => {
-        var response = project
-          ? {
-              meta: {
-                status: 200,
-              },
-              data: project,
-            }
-          : {
-              meta: {
-                status: 404,
-              },
-              data: project,
-            };
-        res.json(response);
-      })
-      .catch((err) => console.log(err));
-  },
   edit: (req, res, next) => {
     let errors = validationResult(req);
 
     if (errors.isEmpty()) {
-      db.Project.update(
+      db.Payment.update(
         {
-          users_id: req.body.user,
-          title: req.body.title,
-          description: req.body.description,
-          total: req.body.total,
-          balance: req.body.balance,
-          cashflow: req.file.filename,
+          projects_id: req.body.type,
+          amount: req.body.amount,
+          receipt: req.body.receipt
         },
         {
           where: {
@@ -71,8 +20,8 @@ module.exports = {
           },
         }
       )
-        .then((project) => {
-          if (project[0]) {
+        .then((payment) => {
+          if (payment[0]) {
             return res.json({
               meta: {
                 status: 200,
@@ -109,20 +58,17 @@ module.exports = {
     let errors = validationResult(req);
 
     if (errors.isEmpty()) {
-      db.Project.create({
-        users_id: req.body.user,
-        title: req.body.title,
-        description: req.body.description,
-        total: req.body.total,
-        balance: req.body.balance,
-        cashflow: req.file.filename,
+      db.Payment.create({
+        projects_id: req.body.type,
+        amount: req.body.amount,
+        receipt: req.body.receipt
       })
-        .then((project) => {
+        .then((payment) => {
           return res.json({
             meta: {
               status: 201,
             },
-            data: project,
+            data: payment,
           });
         })
         .catch((err) => console.log(err));
@@ -139,7 +85,7 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Project.destroy({
+    db.Payment.destroy({
       where: {
         id: {
           [db.Sequelize.Op.like]: [req.params.id],
@@ -152,14 +98,14 @@ module.exports = {
             meta: {
               status: 200,
             },
-            data: `Successfully deleted project id: ${req.params.id}`,
+            data: `Successfully deleted payment id: ${req.params.id}`,
           });
         } else {
           return res.json({
             meta: {
               status: 406,
             },
-            data: `Could not delete project id: ${req.params.id}`,
+            data: `Could not delete payment id: ${req.params.id}`,
           });
         }
       })
