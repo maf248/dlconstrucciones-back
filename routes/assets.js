@@ -7,7 +7,7 @@ const multer = require("multer");
 const assetsController = require("../controllers/assetsController");
 
 // Importing middleware for protected routes
-const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
+const masterWebTokenMiddleware = require("../middlewares/masterWebTokenMiddleware");
 
 // Importing backend validations
 const assetValidate = require("../middlewares/validation/assetValidate");
@@ -29,8 +29,8 @@ const storage = multer.diskStorage({
   const upload = multer({ storage: storage });
 
 // Asset Routes
-router.post('/create', adminWebTokenMiddleware, upload.single("asset"), assetValidate, assetsController.create);
-router.patch('/edit/:id', adminWebTokenMiddleware, upload.single("asset"), assetValidate, assetsController.edit);
-router.delete('/delete/:id', adminWebTokenMiddleware, assetsController.delete);
+router.post('/create', masterWebTokenMiddleware, upload.single("asset"), assetValidate, assetsController.create);
+router.patch('/edit/:id', masterWebTokenMiddleware, upload.single("asset"), assetValidate, assetsController.edit);
+router.delete('/delete/:id', masterWebTokenMiddleware, assetsController.delete);
 
 module.exports = router;
