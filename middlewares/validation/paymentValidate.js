@@ -9,7 +9,7 @@ module.exports = [
       try {
         project = await db.Project.findOne({
           where: {
-            id: req.body.project,
+            id: req.body.projects_id,
           },
         });
         if (project) {

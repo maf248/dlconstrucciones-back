@@ -15,6 +15,7 @@ const batchesRouter = require("./routes/batches");
 const categoriesRouter = require("./routes/categories");
 const projectsRouter = require("./routes/projects");
 const paymentsRouter = require("./routes/payments");
+const assetsRouter = require("./routes/assets");
 const contactRouter = require("./routes/contact");
 const usersRouter = require("./routes/users");
 
@@ -42,6 +43,7 @@ app.use("/api/batches", batchesRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/projects", projectsRouter);
 app.use("/api/payments", paymentsRouter);
+app.use("/api/assets", assetsRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/users", usersRouter);
 
