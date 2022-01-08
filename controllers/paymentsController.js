@@ -8,9 +8,10 @@ module.exports = {
     if (errors.isEmpty()) {
       db.Payment.update(
         {
-          projects_id: req.body.type,
+          projects_id: req.body.projects_id,
           amount: req.body.amount,
-          receipt: req.body.receipt
+          receipt: req.body.receipt,
+          datetime: req.body.datetime,
         },
         {
           where: {
@@ -59,9 +60,10 @@ module.exports = {
 
     if (errors.isEmpty()) {
       db.Payment.create({
-        projects_id: req.body.type,
+        projects_id: req.body.projects_id,
         amount: req.body.amount,
-        receipt: req.body.receipt
+        receipt: req.body.receipt,
+        datetime: req.body.datetime,
       })
         .then((payment) => {
           return res.json({

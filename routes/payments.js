@@ -1,7 +1,5 @@
 var express = require("express");
 var router = express.Router();
-const path = require("path");
-const multer = require("multer");
 
 // Importing API controllers
 const paymentsController = require("../controllers/paymentsController");
@@ -13,8 +11,8 @@ const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware"
 const paymentValidate = require("../middlewares/validation/paymentValidate");
 
 // Payment Routes
-router.post('/create', adminWebTokenMiddleware, upload.single('image'), paymentValidate, paymentsController.create);
-router.patch('/edit/:id', adminWebTokenMiddleware, upload.single('image'), paymentValidate, paymentsController.edit);
+router.post('/create', adminWebTokenMiddleware, paymentValidate, paymentsController.create);
+router.patch('/edit/:id', adminWebTokenMiddleware, paymentValidate, paymentsController.edit);
 router.delete('/delete/:id', adminWebTokenMiddleware, paymentsController.delete);
 
 module.exports = router;
