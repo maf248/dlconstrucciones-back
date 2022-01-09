@@ -454,18 +454,8 @@ module.exports = {
   },
   register: async (req, res, next) => {
     let errors = validationResult(req);
-    console.log(errors);
-    if (!errors.isEmpty()) {
-      return res.json({
-        meta: {
-          status: 401,
-        },
-        data: {
-          errors: errors.errors,
-          body: req.body,
-        },
-      });
-    } else {
+    console.log(errors.errors);
+    if (errors.isEmpty()) {
       db.User.create({
         hash_id: bcryptjs.hashSync("user name " + req.body.firstName, 10),
         first_name: req.body.first_name,
@@ -498,6 +488,16 @@ module.exports = {
           });
         })
         .catch((err) => console.log(err));
+    } else {
+      return res.json({
+        meta: {
+          status: 401,
+        },
+        data: {
+          errors: errors.errors,
+          body: req.body,
+        },
+      });
     }
   },
   identify: async (req, res, next) => {
