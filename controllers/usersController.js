@@ -412,7 +412,7 @@ module.exports = {
     const user = await findUser(req.body.email);
     console.log(user);
 
-    if (user) {
+    if (user && user.validation === null) {
       var passwordCheck = bcryptjs.compareSync(
         req.body.password,
         user.password
@@ -441,7 +441,7 @@ module.exports = {
           user: user,
         },
       });
-    } else {
+    } else if (user.validation === null) {
       res.json({
         meta: {
           status: 401,
@@ -450,12 +450,28 @@ module.exports = {
           message: "Usuario o contraseña incorrectos",
         },
       });
+    } else {
+      res.json({
+        meta: {
+          status: 401,
+        },
+        data: {
+          message: "Email no validado",
+        },
+      });
     }
   },
   register: async (req, res, next) => {
     let errors = validationResult(req);
     console.log(errors.errors);
     if (errors.isEmpty()) {
+      const payload = {
+        check: true,
+        validation: true,
+      };
+      const token = jwt.sign(payload, app.get("llave"), {
+        expiresIn: "12h",
+      });
       db.User.create({
         hash_id: bcryptjs.hashSync("user name " + req.body.firstName, 10),
         first_name: req.body.first_name,
@@ -464,6 +480,7 @@ module.exports = {
         dni: req.body.dni,
         password: bcryptjs.hashSync(req.body.password, 10),
         role: "user",
+        validation: token,
       })
         .then((value) => {
           const payload = {
