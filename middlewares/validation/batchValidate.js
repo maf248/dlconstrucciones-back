@@ -48,6 +48,7 @@ module.exports = [
           return false;
       }
     })
+    .optional()
     .withMessage("El archivo debe tener formato: jpg jpeg o png"),
   check("sold").isBoolean().withMessage("Debe ser booleano, true o false"),
 ];

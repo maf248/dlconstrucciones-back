@@ -9,7 +9,7 @@ const masterWebTokenMiddleware = require("../middlewares/masterWebTokenMiddlewar
 
 // Importing backend validations
 const paymentCreateValidate = require("../middlewares/validation/paymentCreateValidate");
-const paymentEditValidate = require("../middlewares/validation/paymentCreateValidate");
+const paymentEditValidate = require("../middlewares/validation/paymentEditValidate");
 
 // Payment Routes
 router.post('/create', masterWebTokenMiddleware, paymentCreateValidate, paymentsController.create);

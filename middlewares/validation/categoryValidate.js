@@ -26,5 +26,6 @@ module.exports = [
                 return false;
         }
     })
+    .optional()
     .withMessage('El archivo debe tener formato: jpg jpeg o png')
 ]

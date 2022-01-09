@@ -43,10 +43,14 @@ module.exports = [
           ],
         });
         if (project) {
-          function add(accumulator, a) {
-            return accumulator + a.amount;
+          function add(accumulator, a, i) {
+            if (Number(a.id) !== Number(req.params.id)) {
+              return accumulator + a.amount
+            } else {
+              return accumulator
+            }
           }
-          if (Number( Number(project.balance) - Number(req.body.amount)) < 0) {
+          if (Number(project.total) < (Number(project.Payments.reduce(add, 0)) + Number(req.body.amount))) {
             return Promise.reject();
           } else {
             return true;
