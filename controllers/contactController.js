@@ -5,17 +5,7 @@ module.exports = {
   contact: (req, res, next) => {
     let errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-      return res.json({
-        meta: {
-          status: 400,
-        },
-        data: {
-          errors: errors.errors,
-          body: req.body,
-        },
-      });
-    } else {
+    if (errors.isEmpty()) {
       // async..await is not allowed in global scope, must use a wrapper
       async function main() {
         var transporter = nodemailer.createTransport({
@@ -56,6 +46,16 @@ module.exports = {
           })
         )
         .catch(console.error);
+    } else {
+      return res.json({
+        meta: {
+          status: 400,
+        },
+        data: {
+          errors: errors.errors,
+          body: req.body,
+        },
+      });
     }
   },
 };

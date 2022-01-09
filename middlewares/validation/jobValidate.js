@@ -25,7 +25,6 @@ module.exports = [
       "La categoría debe ser numerica, y tiene que existir en la base de datos"
     ),
   check("image")
-    .optional()
     .custom((value, { req }) => {
       switch (req.file.mimetype) {
         case "image/jpg":

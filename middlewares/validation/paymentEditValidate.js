@@ -45,12 +45,15 @@ module.exports = [
         if (project) {
           function add(accumulator, a, i) {
             if (Number(a.id) !== Number(req.params.id)) {
-              return accumulator + a.amount
+              return accumulator + a.amount;
             } else {
-              return accumulator
+              return accumulator;
             }
           }
-          if (Number(project.total) < (Number(project.Payments.reduce(add, 0)) + Number(req.body.amount))) {
+          if (
+            Number(project.total) <
+            Number(project.Payments.reduce(add, 0)) + Number(req.body.amount)
+          ) {
             return Promise.reject();
           } else {
             return true;
@@ -66,9 +69,7 @@ module.exports = [
       "El valor de pago excede el balance. Dejaría el balance en negativo!"
     ),
   check("receipt")
-    .isLength({
-      min: 5,
-    })
+    .notEmpty()
     .optional()
     .withMessage("El recibo debe tener minimo 5 caracteres"),
   check("datetime")

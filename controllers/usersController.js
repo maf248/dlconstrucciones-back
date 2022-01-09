@@ -3,6 +3,7 @@ const db = require("../db/models");
 const bodyParser = require("body-parser");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 const { validationResult } = require("express-validator");
 
 const config = require("../configs/config");
@@ -380,7 +381,7 @@ module.exports = {
           })
             .then((user) => {
               user.password = undefined;
-
+              user.validation = undefined;
               var response = {
                 meta: {
                   status: 200,
@@ -430,7 +431,7 @@ module.exports = {
         expiresIn: "12h",
       });
       user.password = undefined;
-
+      user.validation = undefined;
       res.json({
         meta: {
           status: 200,
@@ -465,44 +466,71 @@ module.exports = {
     let errors = validationResult(req);
     console.log(errors.errors);
     if (errors.isEmpty()) {
+      const hash_id = bcryptjs.hashSync("user name " + req.body.firstName, 10);
       const payload = {
         check: true,
         validation: true,
+        hash_id: hash_id,
       };
-      const token = jwt.sign(payload, app.get("llave"), {
+      const validationToken = jwt.sign(payload, app.get("llave"), {
         expiresIn: "12h",
       });
       db.User.create({
-        hash_id: bcryptjs.hashSync("user name " + req.body.firstName, 10),
+        hash_id: hash_id,
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         email: req.body.email,
         dni: req.body.dni,
         password: bcryptjs.hashSync(req.body.password, 10),
         role: "user",
-        validation: token,
+        validation: validationToken,
       })
         .then((value) => {
-          const payload = {
-            check: true,
-            role: value.dataValues.role,
-          };
-          const token = jwt.sign(payload, app.get("llave"), {
-            expiresIn: "12h",
-          });
-          value.dataValues.password = undefined;
-
-          res.json({
-            meta: {
-              status: 200,
-            },
-            data: {
-              token: token,
-              user: {
-                ...value.dataValues,
+          //Send validation email
+          // async..await is not allowed in global scope, must use a wrapper
+          async function main() {
+            var transporter = nodemailer.createTransport({
+              service: "gmail",
+              auth: {
+                user: "lnconstrucciones0@gmail.com",
+                pass: "pruebanodemailer",
               },
-            },
-          });
+            });
+
+            var mailOptions = {
+              from: "lnconstrucciones0@gmail.com",
+              to: `${req.body.email}`,
+              subject: "Verificación de email",
+              text: `http://localhost:3000/api/users/validate/${validationToken}`,
+            };
+
+            transporter.sendMail(mailOptions, function (error, info) {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log("Email sent: " + info.response);
+              }
+            });
+          }
+
+          main()
+            .then(() => {
+              //Send response data for front-end
+              value.dataValues.password = undefined;
+
+              res.json({
+                meta: {
+                  status: 200,
+                },
+                data: {
+                  message: "Mail de validacion mandado correctamente!",
+                  user: {
+                    ...value.dataValues,
+                  },
+                },
+              });
+            })
+            .catch(console.error);
         })
         .catch((err) => console.log(err));
     } else {
@@ -514,6 +542,41 @@ module.exports = {
           errors: errors.errors,
           body: req.body,
         },
+      });
+    }
+  },
+  validate: (req, res, next) => {
+    if (req.selfHashId) {
+      db.User.update(
+        {
+          validation: null,
+        },
+        {
+          where: {
+            hash_id: req.selfHashId,
+          },
+        }
+      )
+        .then((user) => {
+          if (user) {
+            //Redirect to login page, after email validation
+            res.redirect('/main/auth/login');
+          } else {
+            res.json({
+              meta: {
+                status: 401,
+              },
+              message: "Unable to verify account. Wrong hash_id",
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      return res.json({
+        meta: {
+          status: 401,
+        },
+        message: "Wrong token or not token provided",
       });
     }
   },
@@ -539,7 +602,7 @@ module.exports = {
       })
         .then((user) => {
           user.password = undefined;
-
+          user.validation = undefined;
           var response = {
             meta: {
               status: 200,

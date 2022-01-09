@@ -16,6 +16,7 @@ const roleValidate = require("../middlewares/validation/roleValidate");
 const masterWebTokenMiddleware = require("../middlewares/masterWebTokenMiddleware");
 const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
 const selfWebTokenMiddleware = require("../middlewares/selfWebTokenMiddleware");
+const emailValidateJWTMiddleware = require("../middlewares/emailValidateJWTMiddleware");
 
 // Multer
 const storage = multer.diskStorage({
@@ -50,6 +51,11 @@ router.post(
 router.post("/identify", selfWebTokenMiddleware, usersController.identify);
 router.post("/login", usersController.login);
 router.post("/register", registrationValidate, usersController.register);
+router.get(
+  "/validate/:jwt",
+  emailValidateJWTMiddleware,
+  usersController.validate
+);
 router.delete(
   "/delete/:id",
   masterWebTokenMiddleware,

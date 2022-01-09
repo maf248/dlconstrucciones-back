@@ -59,9 +59,7 @@ module.exports = [
       "El valor de pago excede el balance. Dejaría el balance en negativo!"
     ),
   check("receipt")
-    .isLength({
-      min: 5,
-    })
+    .notEmpty()
     .optional()
     .withMessage("El recibo debe tener minimo 5 caracteres"),
   check("datetime")
