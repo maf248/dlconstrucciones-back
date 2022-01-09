@@ -28,6 +28,39 @@ module.exports = [
     .isNumeric()
     .isInt({ gt: -1 })
     .withMessage("El pago debe ser numerico y mayor a 0"),
+  check("amount")
+    .custom(async function (value, { req }) {
+      let project;
+      try {
+        project = await db.Project.findOne({
+          where: {
+            id: req.body.projects_id,
+          },
+          include: [
+            {
+              association: "Payments",
+            },
+          ],
+        });
+        if (project) {
+          function add(accumulator, a) {
+            return accumulator + a.amount;
+          }
+          if (Number( Number(project.balance) - Number(req.body.amount)) < 0) {
+            return Promise.reject();
+          } else {
+            return true;
+          }
+        } else {
+          return Promise.reject();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })
+    .withMessage(
+      "El valor de pago excede el balance. Dejaría el balance en negativo!"
+    ),
   check("receipt")
     .isLength({
       min: 5,
