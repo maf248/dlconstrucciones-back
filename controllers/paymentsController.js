@@ -147,52 +147,69 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Payment.destroy({
+    db.Payment.findOne({
       where: {
-        id: {
-          [db.Sequelize.Op.like]: [req.params.id],
-        },
+        id: req.params.id,
       },
     })
-      .then((x) => {
-        if (x) {
-          // Update project balance acording to all payments after creating new payment
-          db.Payment.sum("amount", {
+      .then((payment) => {
+        if (payment) {
+          db.Payment.destroy({
             where: {
-              projects_id: req.body.projects_id,
+              id: {
+                [db.Sequelize.Op.like]: [req.params.id],
+              },
             },
           })
-            .then((newBalancePayments) => {
-              db.Project.update(
-                {
-                  balance: db.sequelize.literal(
-                    `total - ${newBalancePayments}`
-                  ),
-                },
-                {
+            .then((x) => {
+              if (x) {
+                // Update project balance acording to all payments after creating new payment
+                db.Payment.sum("amount", {
                   where: {
-                    id: req.body.projects_id,
+                    projects_id: payment.projects_id,
                   },
-                }
-              )
-                .then((y) => {
-                  if (y) {
-                    return res.json({
-                      meta: {
-                        status: 200,
-                      },
-                      data: `Successfully deleted payment id: ${req.params.id}`,
-                    });
-                  } else {
-                    return res.json({
-                      meta: {
-                        status: 406,
-                      },
-                      data: `Successfully deleted payment id: ${req.params.id} but could not update balance.`,
-                    });
-                  }
                 })
-                .catch((err) => console.log(err));
+                  .then((newBalancePayments) => {
+                    db.Project.update(
+                      {
+                        balance: db.sequelize.literal(
+                          `total - ${Number(newBalancePayments)}`
+                        ),
+                      },
+                      {
+                        where: {
+                          id: payment.projects_id,
+                        },
+                      }
+                    )
+                      .then((y) => {
+                        if (y) {
+                          return res.json({
+                            meta: {
+                              status: 200,
+                            },
+                            data: `Successfully deleted payment id: ${req.params.id}`,
+                          });
+                        } else {
+                          return res.json({
+                            meta: {
+                              status: 406,
+                            },
+                            data: `Successfully deleted payment id: ${req.params.id} but could not update balance.`,
+                          });
+                        }
+                      })
+                      .catch((err) => console.log(err));
+                  })
+                  .catch((err) => console.log(err));
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: `Could not delete payment id: ${req.params.id}`,
+                });
+              }
             })
             .catch((err) => console.log(err));
         } else {
