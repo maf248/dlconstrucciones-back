@@ -60,7 +60,6 @@ module.exports = {
           title: req.body.title,
           description: req.body.description,
           total: req.body.total,
-          balance: req.body.balance,
           cashflow: req.file.filename,
         },
         {
@@ -114,7 +113,7 @@ module.exports = {
         title: req.body.title,
         description: req.body.description,
         total: req.body.total,
-        balance: req.body.balance,
+        balance: req.body.total,
         cashflow: req.file.filename,
       })
         .then((project) => {

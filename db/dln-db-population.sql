@@ -317,9 +317,9 @@ INSERT INTO users (hash_id, first_name, last_name, email, password, avatar, dni,
 ('$2a$10$1EHxHf5rQ.gyJ2xnJ55sFeHVnMlxbXReGoaFC1ID/dhumC8mGG8Ii','Tobias','Blaksley','tobias.blaksley@hotmail.com','$2a$10$nY9qIx.MJ4cXVG5csGpFFeQzQl4J2h0zhT.VndbdlnZOGzYjdbcmW','Usuario-1_1610562779647.jfif',NULL,'master'),
 ('$2a$10$qpbUssE9j0VlJYCAlUeDweZLwvsKpHYOM9aJ7TjAAGyBLH.5xmmbu','Marcelo','Fanego','mafmaggot@gmail.com','$2a$10$MHA8vyzxjf4h8rg.WVSPEeXvh9ZX5Uv/a9s58zz70WrnOQdkNLMhW','Usuario-4_1611071905072.png',35960622,'admin');
 
-INSERT INTO projects (users_id, total, description, cashflow) VALUES
-(1,1500,'Este es un proyecto con descripción','cronoejemplo1'),
-(2,2500,'Descripción de prueba',NULL);
+INSERT INTO projects (users_id, total, balance, description, cashflow) VALUES
+(1,1500,1400,'Este es un proyecto con descripción','cronoejemplo1'),
+(2,2500,2200,'Descripción de prueba',NULL);
 
 INSERT INTO payments (projects_id, amount, receipt, datetime) VALUES
 (1,100,'092384023948230948','2020-01-01 10:10:10'),

@@ -46,12 +46,11 @@ module.exports = [
           function add(accumulator, a) {
             return accumulator + a.amount;
           }
-
-          console.log("🚀 ~ file: paymentValidate.js ~ line 51 ~ Booooooooooooooolean", Boolean(project.total > Number(project.balance + req.body.amount)))
-          if (project.total > Number(project.balance + req.body.amount)) {
+          if (Number( Number(project.balance) - Number(req.body.amount)) < 0) {
             return Promise.reject();
+          } else {
+            return true;
           }
-          return true;
         } else {
           return Promise.reject();
         }

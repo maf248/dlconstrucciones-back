@@ -43,10 +43,7 @@ module.exports = [
           ],
         });
         if (project) {
-          function add(accumulator, a) {
-            return accumulator + a.amount;
-          }
-          if (Number( Number(project.balance) - Number(req.body.amount)) < 0) {
+          if (Number(Number(project.balance) - Number(req.body.amount)) < 0) {
             return Promise.reject();
           } else {
             return true;
