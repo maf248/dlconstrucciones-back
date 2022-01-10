@@ -54,42 +54,51 @@ module.exports = {
     let errors = validationResult(req);
 
     if (errors.isEmpty()) {
-      db.Project.update(
-        {
-          users_id: req.body.user,
-          title: req.body.title,
-          description: req.body.description,
-          total: req.body.total,
-          cashflow: req.file.filename,
+      db.Payment.sum("amount", {
+        where: {
+          projects_id: req.params.id,
         },
-        {
-          where: {
-            id: {
-              [db.Sequelize.Op.like]: [req.params.id],
+      })
+        .then((newBalancePayments) => {
+          db.Project.update(
+            {
+              users_id: req.body.user,
+              title: req.body.title,
+              description: req.body.description,
+              total: req.body.total,
+              balance: Number(Number(req.body.total) - Number(newBalancePayments)),
+              cashflow: req.file.filename,
             },
-          },
-        }
-      )
-        .then((project) => {
-          if (project[0]) {
-            return res.json({
-              meta: {
-                status: 200,
+            {
+              where: {
+                id: {
+                  [db.Sequelize.Op.like]: [req.params.id],
+                },
               },
-              data: {
-                message: "Editado correctamente",
-              },
-            });
-          } else {
-            return res.json({
-              meta: {
-                status: 406,
-              },
-              data: {
-                message: "Id invalido",
-              },
-            });
-          }
+            }
+          )
+            .then((project) => {
+              if (project[0]) {
+                return res.json({
+                  meta: {
+                    status: 200,
+                  },
+                  data: {
+                    message: "Editado correctamente",
+                  },
+                });
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: {
+                    message: "Id invalido",
+                  },
+                });
+              }
+            })
+            .catch((err) => console.log(err));
         })
         .catch((err) => console.log(err));
     } else {
