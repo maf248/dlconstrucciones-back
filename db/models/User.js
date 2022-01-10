@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       unique: true,
     },
+    restorepass: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+    },
     first_name: {
       type: DataTypes.STRING,
       allowNull: false,

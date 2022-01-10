@@ -125,6 +125,7 @@ CREATE TABLE IF NOT EXISTS `heroku_d90f346a378032b`.`users` (
   `hash_id` VARCHAR(100) NOT NULL,
   `validation` VARCHAR(100) NULL DEFAULT NULL,
   `email` VARCHAR(100) NOT NULL,
+  `restorepass` VARCHAR(100) NULL DEFAULT NULL,
   `password` VARCHAR(100) NOT NULL,
   `first_name` VARCHAR(100) NOT NULL,
   `last_name` VARCHAR(100) NOT NULL,
@@ -137,7 +138,8 @@ CREATE TABLE IF NOT EXISTS `heroku_d90f346a378032b`.`users` (
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `hash_id_UNIQUE` (`hash_id` ASC),
-  UNIQUE INDEX `validation_UNIQUE` (`validation` ASC))
+  UNIQUE INDEX `validation_UNIQUE` (`validation` ASC),
+  UNIQUE INDEX `restorepass_UNIQUE` (`restorepass` ASC))
 ENGINE = InnoDB;
 
 

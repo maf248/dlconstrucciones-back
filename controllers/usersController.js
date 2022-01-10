@@ -464,7 +464,7 @@ module.exports = {
   },
   register: async (req, res, next) => {
     let errors = validationResult(req);
-    console.log(errors.errors);
+
     if (errors.isEmpty()) {
       const hash_id = bcryptjs.hashSync("user name " + req.body.firstName, 10);
       const payload = {
@@ -487,7 +487,7 @@ module.exports = {
       })
         .then((value) => {
           //Send validation email
-          // async..await is not allowed in global scope, must use a wrapper
+
           async function main() {
             var transporter = nodemailer.createTransport({
               service: "gmail",
@@ -545,7 +545,7 @@ module.exports = {
       });
     }
   },
-  validate: (req, res, next) => {
+  validateacount: (req, res, next) => {
     if (req.selfHashId) {
       db.User.update(
         {
@@ -560,7 +560,7 @@ module.exports = {
         .then((user) => {
           if (user) {
             //Redirect to login page, after email validation
-            res.redirect('/main/auth/login');
+            res.redirect("/main/auth/login");
           } else {
             res.json({
               meta: {
@@ -577,6 +577,220 @@ module.exports = {
           status: 401,
         },
         message: "Wrong token or not token provided",
+      });
+    }
+  },
+  forgotpass: (req, res, next) => {
+    let errors = validationResult(req);
+
+    if (errors.isEmpty()) {
+      const payload = {
+        check: true,
+        email: req.body.email,
+      };
+      const passRestoreToken = jwt.sign(payload, app.get("llave"), {
+        expiresIn: "12h",
+      });
+      db.User.update(
+        {
+          restorepass: passRestoreToken,
+        },
+        {
+          where: {
+            email: req.body.email,
+          },
+        }
+      )
+        .then((user) => {
+          if (user) {
+            //Send password restore email
+            async function main() {
+              var transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                  user: "lnconstrucciones0@gmail.com",
+                  pass: "pruebanodemailer",
+                },
+              });
+
+              var mailOptions = {
+                from: "lnconstrucciones0@gmail.com",
+                to: `${req.body.email}`,
+                subject: "Recuperación de contraseña",
+                text: `http://localhost:3000/api/users/restorepass/${passRestoreToken}`,
+              };
+
+              transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log("Email sent: " + info.response);
+                }
+              });
+            }
+
+            main()
+              .then(() => {
+                res.json({
+                  meta: {
+                    status: 200,
+                  },
+                  data: {
+                    message:
+                      "Mail de restablecimiento de contraseña mandado correctamente!",
+                  },
+                });
+              })
+              .catch(console.error);
+          } else {
+            return res.json({
+              meta: {
+                status: 401,
+              },
+              data: {
+                errors: errors.errors,
+                body: req.body,
+              },
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      return res.json({
+        meta: {
+          status: 401,
+        },
+        data: {
+          errors: errors.errors,
+          body: req.body,
+        },
+      });
+    }
+  },
+  restorepass: (req, res, next) => {
+    if (req.email) {
+      db.User.update(
+        {
+          restorepass: null,
+          password: "restorepass",
+        },
+        {
+          where: {
+            email: req.email,
+          },
+        }
+      )
+        .then((user) => {
+          if (user) {
+            //Redirect to login page, after email validation
+            res.redirect("/main/auth/login");
+          } else {
+            res.json({
+              meta: {
+                status: 401,
+              },
+              message: "Unable to verify account. Wrong hash_id",
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      return res.json({
+        meta: {
+          status: 401,
+        },
+        message: "Wrong token or not token provided",
+      });
+    }
+  },
+  newpass: (req, res, next) => {
+    let errors = validationResult(req);
+
+    if (errors.isEmpty()) {
+      db.User.update(
+        {
+          password: bcryptjs.hashSync(req.body.password, 10),
+        },
+        {
+          where: {
+            email: req.body.email,
+          },
+        }
+      )
+        .then(async (user) => {
+          if (user) {
+            const user = await findUser(req.body.email);
+            console.log(user);
+
+            if (user && user.validation === null) {
+              var passwordCheck = bcryptjs.compareSync(
+                req.body.password,
+                user.password
+              );
+              console.log(passwordCheck);
+            }
+
+            if (user && passwordCheck) {
+              const payload = {
+                check: true,
+                role: user.role,
+                hash_id: user.hash_id,
+              };
+              const token = jwt.sign(payload, app.get("llave"), {
+                expiresIn: "12h",
+              });
+              user.password = undefined;
+              user.validation = undefined;
+              res.json({
+                meta: {
+                  status: 200,
+                },
+                data: {
+                  message: "Autenticación correcta",
+                  token: token,
+                  user: user,
+                },
+              });
+            } else if (user.validation === null) {
+              res.json({
+                meta: {
+                  status: 401,
+                },
+                data: {
+                  message: "Usuario o contraseña incorrectos",
+                },
+              });
+            } else {
+              res.json({
+                meta: {
+                  status: 401,
+                },
+                data: {
+                  message: "Email no validado",
+                },
+              });
+            }
+          } else {
+            return res.json({
+              meta: {
+                status: 401,
+              },
+              data: {
+                message: "Could not set new password",
+              },
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      return res.json({
+        meta: {
+          status: 400,
+        },
+        data: {
+          errors: errors.errors,
+          body: req.body,
+        },
       });
     }
   },

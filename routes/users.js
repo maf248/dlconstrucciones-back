@@ -11,12 +11,15 @@ const registrationValidate = require("../middlewares/validation/registrationVali
 const profileValidate = require("../middlewares/validation/profileValidate");
 const avatarValidate = require("../middlewares/validation/avatarValidate");
 const roleValidate = require("../middlewares/validation/roleValidate");
+const restorePassMailValidate = require("../middlewares/validation/restorePassMailValidate");7
+const newPassValidate = require("../middlewares/validation/newPassValidate");
 
 // Importing middleware for protected routes
 const masterWebTokenMiddleware = require("../middlewares/masterWebTokenMiddleware");
 const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
 const selfWebTokenMiddleware = require("../middlewares/selfWebTokenMiddleware");
 const emailValidateJWTMiddleware = require("../middlewares/emailValidateJWTMiddleware");
+const restorePassJWTMiddleware = require("../middlewares/restorePassJWTMiddleware");
 
 // Multer
 const storage = multer.diskStorage({
@@ -54,8 +57,15 @@ router.post("/register", registrationValidate, usersController.register);
 router.get(
   "/validate/:jwt",
   emailValidateJWTMiddleware,
-  usersController.validate
+  usersController.validateacount
 );
+router.post("/forgotpass", restorePassMailValidate, usersController.forgotpass);
+router.get(
+  "/restorepass/:jwt",
+  restorePassJWTMiddleware,
+  usersController.restorepass
+);
+router.post("/newpass", newPassValidate, usersController.newpass);
 router.delete(
   "/delete/:id",
   masterWebTokenMiddleware,
