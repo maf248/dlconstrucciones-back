@@ -197,7 +197,7 @@ module.exports = {
               .then((user) => {
                 if (user) {
                   res.sendFile(
-                    path.join(__dirname, "../private", `${req.params.file}`)
+                    path.join(__dirname, "../private/", `${req.params.file}`)
                   );
                 } else {
                   return res.json({
@@ -223,7 +223,7 @@ module.exports = {
               .then((user) => {
                 if (user) {
                   res.sendFile(
-                    path.join(__dirname, "../private", `${req.params.file}`)
+                    path.join(__dirname, "../private/", `${req.params.file}`)
                   );
                 } else {
                   return res.json({
