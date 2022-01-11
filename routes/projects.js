@@ -8,6 +8,7 @@ const projectsController = require("../controllers/projectsController");
 
 // Importing middleware for protected routes
 const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
+const selfWebTokenMiddleware = require("../middlewares/selfWebTokenMiddleware");
 
 // Importing backend validations
 const projectValidate = require("../middlewares/validation/projectValidate");
@@ -36,5 +37,6 @@ router.get('/:id', adminWebTokenMiddleware, projectsController.detail);
 router.post('/create', adminWebTokenMiddleware, upload.single('cashflow'), projectValidate, projectsController.create);
 router.patch('/edit/:id', adminWebTokenMiddleware, upload.single('cashflow'), projectValidate, projectsController.edit);
 router.delete('/delete/:id', adminWebTokenMiddleware, projectsController.delete);
+router.get('/cashflow/:file', selfWebTokenMiddleware, projectsController.cashflow);
 
 module.exports = router;

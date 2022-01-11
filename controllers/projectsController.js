@@ -1,4 +1,5 @@
 const db = require("../db/models");
+const path = require("path");
 const { validationResult } = require("express-validator");
 
 module.exports = {
@@ -66,7 +67,9 @@ module.exports = {
               title: req.body.title,
               description: req.body.description,
               total: req.body.total,
-              balance: Number(Number(req.body.total) - Number(newBalancePayments)),
+              balance: Number(
+                Number(req.body.total) - Number(newBalancePayments)
+              ),
               cashflow: req.file.filename,
             },
             {
@@ -168,6 +171,77 @@ module.exports = {
               status: 406,
             },
             data: `Could not delete project id: ${req.params.id}`,
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+  },
+  cashflow: (req, res, next) => {
+    db.Project.findOne({
+      where: {
+        cashflow: {
+          [db.Sequelize.Op.like]: [req.params.file],
+        },
+      },
+    })
+      .then((project) => {
+        if (project) {
+          if (req.decoded.role === "master") {
+            db.User.findOne({
+              where: {
+                id: {
+                  [db.Sequelize.Op.like]: [project.users_id],
+                },
+              },
+            })
+              .then((user) => {
+                if (user) {
+                  res.sendFile(
+                    path.join(__dirname, "../private", `${req.params.file}`)
+                  );
+                } else {
+                  return res.json({
+                    meta: {
+                      status: 406,
+                    },
+                    data: `Not found user: ${project.users_id}`,
+                  });
+                }
+              })
+              .catch((err) => console.log(err));
+          } else {
+            db.User.findOne({
+              where: {
+                id: {
+                  [db.Sequelize.Op.like]: [project.users_id],
+                },
+                hash_id: {
+                  [db.Sequelize.Op.like]: [req.selfHashId],
+                },
+              },
+            })
+              .then((user) => {
+                if (user) {
+                  res.sendFile(
+                    path.join(__dirname, "../private", `${req.params.file}`)
+                  );
+                } else {
+                  return res.json({
+                    meta: {
+                      status: 406,
+                    },
+                    data: `Not found user: ${project.users_id}`,
+                  });
+                }
+              })
+              .catch((err) => console.log(err));
+          }
+        } else {
+          return res.json({
+            meta: {
+              status: 406,
+            },
+            data: `Not found file: ${req.params.file}`,
           });
         }
       })
