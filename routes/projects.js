@@ -38,5 +38,6 @@ router.post('/create', adminWebTokenMiddleware, upload.single('cashflow'), proje
 router.patch('/edit/:id', adminWebTokenMiddleware, upload.single('cashflow'), projectValidate, projectsController.edit);
 router.delete('/delete/:id', adminWebTokenMiddleware, projectsController.delete);
 router.get('/cashflow/:file', selfWebTokenMiddleware, projectsController.cashflow);
+router.get('/assets/:file', selfWebTokenMiddleware, projectsController.assets);
 
 module.exports = router;

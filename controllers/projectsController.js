@@ -247,4 +247,80 @@ module.exports = {
       })
       .catch((err) => console.log(err));
   },
+  assets: (req, res, next) => {
+    if (req.selfHashId && req.decoded.role === "master") {
+      db.Asset.findOne({
+        where: {
+          asset: {
+            [db.Sequelize.Op.like]: [req.params.file],
+          },
+        },
+      })
+        .then((asset) => {
+          if (asset) {
+            return res.sendFile(
+              path.join(__dirname, "../private/", `${req.params.file}`)
+            );
+          } else {
+            return res.json({
+              meta: {
+                status: 406,
+              },
+              data: `Not found asset: ${req.params.file}`,
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      db.User.findOne({
+        where: {
+          hash_id: {
+            [db.Sequelize.Op.like]: [req.selfHashId],
+          },
+        },
+      })
+        .then((user) => {
+          if (user) {
+            db.Project.findOne({
+              where: {
+                users_id: {
+                  [db.Sequelize.Op.like]: [user.id],
+                },
+              },
+              include: [
+                {
+                  association: "Assets",
+                },
+              ],
+            })
+              .then((project) => {
+                const found = project.Assets.filter(
+                  (a) => a.asset === `${req.params.file}`
+                );
+                if (found.length > 0) {
+                  return res.sendFile(
+                    path.join(__dirname, "../private/", `${req.params.file}`)
+                  );
+                } else {
+                  return res.json({
+                    meta: {
+                      status: 406,
+                    },
+                    message: `Could not found asset or wrong privileges for: ${req.params.file}`,
+                  });
+                }
+              })
+              .catch((err) => console.log(err));
+          } else {
+            return res.json({
+              meta: {
+                status: 406,
+              },
+              data: `Not found user: ${req.selfHashId}`,
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  },
 };

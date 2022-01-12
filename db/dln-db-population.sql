@@ -327,4 +327,6 @@ INSERT INTO payments (projects_id, amount, receipt, datetime) VALUES
 
 INSERT INTO assets (projects_id, asset, type) VALUES
 (1,'imagenejemplo.png','image'),
-(1,'videoejemplo.mp4','video');
+(1,'videoejemplo.mp4','video'),
+(2,'imagenejemplo2.png','image'),
+(2,'videoejemplo2.mp4','video');
