@@ -70,7 +70,7 @@ module.exports = {
               balance: Number(
                 Number(req.body.total) - Number(newBalancePayments)
               ),
-              cashflow: req.file.filename,
+              cashflow: req.file?.filename,
             },
             {
               where: {
@@ -126,7 +126,7 @@ module.exports = {
         description: req.body.description,
         total: req.body.total,
         balance: req.body.total,
-        cashflow: req.file.filename,
+        cashflow: req.file?.filename,
       })
         .then((project) => {
           return res.json({
