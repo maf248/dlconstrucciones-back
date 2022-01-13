@@ -491,6 +491,7 @@ module.exports = {
           async function main() {
             var transporter = nodemailer.createTransport({
               service: "gmail",
+              secure: false,
               auth: {
                 user: "lnconstrucciones0@gmail.com",
                 pass: "pruebanodemailer",
@@ -660,6 +661,7 @@ module.exports = {
             async function main() {
               var transporter = nodemailer.createTransport({
                 service: "gmail",
+                secure: false,
                 auth: {
                   user: "lnconstrucciones0@gmail.com",
                   pass: "pruebanodemailer",
