@@ -670,7 +670,7 @@ module.exports = {
                 from: "lnconstrucciones0@gmail.com",
                 to: `${req.body.email}`,
                 subject: "Recuperación de contraseña",
-                text: `http://localhost:3000/api/users/restorepass/${passRestoreToken}`,
+                text: `https://lnconstrucciones.herokuapp.com/api/users/restorepass/${passRestoreToken}`,
               };
 
               transporter.sendMail(mailOptions, function (error, info) {
