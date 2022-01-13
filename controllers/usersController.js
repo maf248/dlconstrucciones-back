@@ -682,8 +682,8 @@ module.exports = {
       )
         .then((user) => {
           if (user) {
-            //Redirect to login page, after email validation
-            res.redirect("/main/auth/login");
+            //Redirect new password set, after email validation
+            res.redirect("/main/auth/recuperar-contrasenia-step2");
           } else {
             res.json({
               meta: {
