@@ -545,6 +545,59 @@ module.exports = {
       });
     }
   },
+  enroll: async (req, res, next) => {
+    if (req.decoded.role === "master") {
+      let errors = validationResult(req);
+
+      if (errors.isEmpty()) {
+        const hash_id = bcryptjs.hashSync(
+          "user name " + req.body.firstName,
+          10
+        );
+        db.User.create({
+          hash_id: hash_id,
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          email: req.body.email,
+          dni: req.body.dni,
+          password: bcryptjs.hashSync(req.body.password, 10),
+          role: req.body.role,
+        })
+          .then((value) => {
+            //Send data for user enrolled correctly
+            res.json({
+              meta: {
+                status: 200,
+              },
+              data: {
+                message: "User correctly enrolled",
+                user: {
+                  ...value.dataValues,
+                },
+              },
+            });
+          })
+          .catch((err) => console.log(err));
+      } else {
+        return res.json({
+          meta: {
+            status: 401,
+          },
+          data: {
+            errors: errors.errors,
+            body: req.body,
+          },
+        });
+      }
+    } else {
+      return res.json({
+        meta: {
+          status: 406,
+        },
+        message: `Unauthorized action for ${req.decoded.role}`,
+      });
+    }
+  },
   validateacount: (req, res, next) => {
     if (req.selfHashId) {
       db.User.update(
@@ -560,9 +613,9 @@ module.exports = {
         .then((user) => {
           if (user) {
             //Redirect to login page, after email validation
-            res.redirect("/main/auth/login");
+            return res.redirect("/main/auth/login");
           } else {
-            res.json({
+            return res.json({
               meta: {
                 status: 401,
               },

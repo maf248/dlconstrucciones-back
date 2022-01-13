@@ -8,6 +8,7 @@ const usersController = require("../controllers/usersController");
 
 // Importing backend validations
 const registrationValidate = require("../middlewares/validation/registrationValidate");
+const enrollValidate = require("../middlewares/validation/enrollValidate");
 const profileValidate = require("../middlewares/validation/profileValidate");
 const avatarValidate = require("../middlewares/validation/avatarValidate");
 const roleValidate = require("../middlewares/validation/roleValidate");
@@ -54,6 +55,7 @@ router.post(
 router.post("/identify", selfWebTokenMiddleware, usersController.identify);
 router.post("/login", usersController.login);
 router.post("/register", registrationValidate, usersController.register);
+router.post("/enroll", masterWebTokenMiddleware, enrollValidate, usersController.enroll);
 router.get(
   "/validate/:jwt",
   emailValidateJWTMiddleware,
