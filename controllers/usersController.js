@@ -501,7 +501,7 @@ module.exports = {
               from: "lnconstrucciones0@gmail.com",
               to: `${req.body.email}`,
               subject: "Verificación de email",
-              text: `http://localhost:3000/api/users/validate/${validationToken}`,
+              text: `https://lnconstrucciones.herokuapp.com/api/users/validate/${validationToken}`,
             };
 
             transporter.sendMail(mailOptions, function (error, info) {
