@@ -324,9 +324,3 @@ INSERT INTO projects (users_id, total, balance, description, cashflow) VALUES
 INSERT INTO payments (projects_id, amount, receipt, datetime) VALUES
 (1,100,'092384023948230948','2020-01-01 10:10:10'),
 (2,300,'BA2384023934534550','2020-01-01 10:10:10');
-
-INSERT INTO assets (projects_id, asset, type) VALUES
-(1,'imagenejemplo.png','image'),
-(1,'videoejemplo.mp4','video'),
-(2,'imagenejemplo2.png','image'),
-(2,'videoejemplo2.mp4','video');
