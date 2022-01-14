@@ -491,6 +491,7 @@ module.exports = {
           async function main() {
             var transporter = nodemailer.createTransport({
               service: "gmail",
+              secure: false,
               auth: {
                 user: "lnconstrucciones0@gmail.com",
                 pass: "pruebanodemailer",
@@ -501,7 +502,7 @@ module.exports = {
               from: "lnconstrucciones0@gmail.com",
               to: `${req.body.email}`,
               subject: "Verificación de email",
-              text: `http://localhost:3000/api/users/validate/${validationToken}`,
+              text: `https://lnconstrucciones.herokuapp.com/api/users/validate/${validationToken}`,
             };
 
             transporter.sendMail(mailOptions, function (error, info) {
@@ -660,6 +661,7 @@ module.exports = {
             async function main() {
               var transporter = nodemailer.createTransport({
                 service: "gmail",
+                secure: false,
                 auth: {
                   user: "lnconstrucciones0@gmail.com",
                   pass: "pruebanodemailer",
@@ -670,7 +672,7 @@ module.exports = {
                 from: "lnconstrucciones0@gmail.com",
                 to: `${req.body.email}`,
                 subject: "Recuperación de contraseña",
-                text: `http://localhost:3000/api/users/restorepass/${passRestoreToken}`,
+                text: `https://lnconstrucciones.herokuapp.com/api/users/restorepass/${passRestoreToken}`,
               };
 
               transporter.sendMail(mailOptions, function (error, info) {
