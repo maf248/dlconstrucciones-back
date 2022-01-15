@@ -411,14 +411,12 @@ module.exports = {
   },
   login: async (req, res, next) => {
     const user = await findUser(req.body.email);
-    console.log(user);
 
     if (user && user.validation === null) {
       var passwordCheck = bcryptjs.compareSync(
         req.body.password,
         user.password
       );
-      console.log(passwordCheck);
     }
 
     if (user && passwordCheck) {
@@ -428,7 +426,7 @@ module.exports = {
         hash_id: user.hash_id,
       };
       const token = jwt.sign(payload, app.get("llave"), {
-        expiresIn: "12h",
+        expiresIn: req.body.rememberMe ? "7d" : "12h",
       });
       user.password = undefined;
       user.validation = undefined;
