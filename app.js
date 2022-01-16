@@ -10,6 +10,7 @@ const bodyParser = require("body-parser");
 const interestsRouter = require("./routes/interests");
 const servicesRouter = require("./routes/services");
 const contentsRouter = require("./routes/contents");
+const picturesRouter = require("./routes/pictures");
 const typesRouter = require("./routes/types");
 const jobsRouter = require("./routes/jobs");
 const batchesRouter = require("./routes/batches");
@@ -38,6 +39,7 @@ app.use(bodyParser.json());
 // Main Routes
 app.use("/api/interests", interestsRouter);
 app.use("/api/services/contents", contentsRouter);
+app.use("/api/services/pictures", picturesRouter);
 app.use("/api/services", servicesRouter);
 app.use("/api/types", typesRouter);
 app.use("/api/jobs", jobsRouter);

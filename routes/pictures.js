@@ -10,12 +10,12 @@ const picturesController = require("../controllers/picturesController");
 const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
 
 // Importing backend validations
-const serviceValidate = require("../middlewares/validation/serviceValidate");
 const picturesValidate = require("../middlewares/validation/picturesValidate");
+const pictureValidate = require("../middlewares/validation/pictureValidate");
 
 // Multer
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function (req, files, cb) {
     let dirImage = path.join("public", "images");
     return cb(null, dirImage);
   },
@@ -37,9 +37,19 @@ router.post(
   adminWebTokenMiddleware,
   upload.any("pictures"),
   picturesValidate,
-  picturesController.picturesCreate
+  picturesController.create
 );
-// router.patch('/edit/:id', adminWebTokenMiddleware, upload.single('image'), serviceValidate, picturesController.picturesEdit);
-// router.delete('/delete/:id', adminWebTokenMiddleware, picturesController.picturesDelete);
+router.patch(
+  "/edit/:id",
+  adminWebTokenMiddleware,
+  upload.single("pictures"),
+  pictureValidate,
+  picturesController.edit
+);
+router.delete(
+  "/delete/:id",
+  adminWebTokenMiddleware,
+  picturesController.delete
+);
 
 module.exports = router;

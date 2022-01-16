@@ -30,21 +30,15 @@ module.exports = [
     ),
   check("pictures")
     .custom((value, { req }) => {
-      console.log(req.files);
-      console.log(
-        !req.files.some(
-          (e) =>
-            e.mimetype !== "image/jpg" &&
-            e.mimetype !== "image/jpeg" &&
-            e.mimetype !== "image/png"
-        )
-      );
-      return !req.files.some(
-        (e) =>
-          e.mimetype !== "image/jpg" &&
-          e.mimetype !== "image/jpeg" &&
-          e.mimetype !== "image/png"
-      );
+      if (
+        req.file.mimetype === "image/jpg" ||
+        req.file.mimetype === "image/jpeg" ||
+        req.file.mimetype === "image/png"
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     })
-    .withMessage("Los archivos deben tener formato: jpg jpeg o png"),
+    .withMessage("El archivo debe tener formato: jpg jpeg o png"),
 ];
