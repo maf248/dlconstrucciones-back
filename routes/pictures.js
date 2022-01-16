@@ -4,7 +4,7 @@ const path = require("path");
 const multer = require("multer");
 
 // Importing API controllers
-const servicesController = require("../controllers/servicesController");
+const picturesController = require("../controllers/picturesController");
 
 // Importing middleware for protected routes
 const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware");
@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     return cb(
       null,
-      "Servicio" + "_" + Date.now() + path.extname(file.originalname)
+      "Servicio-picture" + "_" + Date.now() + path.extname(file.originalname)
     );
   },
 });
@@ -31,27 +31,15 @@ const upload = multer({
   storage: storage,
 });
 
-// Services Routes
-router.get("/", servicesController.index);
-router.get("/:id", servicesController.detail);
+// Pictures Routes
 router.post(
   "/create",
   adminWebTokenMiddleware,
-  upload.single("image"),
-  serviceValidate,
-  servicesController.create
+  upload.any("pictures"),
+  picturesValidate,
+  picturesController.picturesCreate
 );
-router.patch(
-  "/edit/:id",
-  adminWebTokenMiddleware,
-  upload.single("image"),
-  serviceValidate,
-  servicesController.edit
-);
-router.delete(
-  "/delete/:id",
-  adminWebTokenMiddleware,
-  servicesController.delete
-);
+// router.patch('/edit/:id', adminWebTokenMiddleware, upload.single('image'), serviceValidate, picturesController.picturesEdit);
+// router.delete('/delete/:id', adminWebTokenMiddleware, picturesController.picturesDelete);
 
 module.exports = router;

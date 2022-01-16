@@ -150,5 +150,38 @@ module.exports = {
         }
       })
       .catch((err) => console.log(err));
-  }
+  },
+  picturesCreate: (req, res, next) => {
+    let errors = validationResult(req);
+
+    if (errors.isEmpty() && req.files.length > 0) {
+      console.log(req.files);
+
+      req.files.forEach((picture) => {
+        db.Picture.create({
+          services_b_id: req.body.serviceId,
+          picture: picture.filename,
+        })
+          .then((pictures) => {
+            return res.json({
+              meta: {
+                status: 201,
+              },
+              data: pictures,
+            });
+          })
+          .catch((err) => console.log(err));
+      });
+    } else {
+      return res.json({
+        meta: {
+          status: 400,
+        },
+        data: {
+          errors: errors.errors,
+          body: req.body,
+        },
+      });
+    }
+  },
 };
