@@ -4,7 +4,11 @@ const { validationResult } = require("express-validator");
 module.exports = {
   create: (req, res, next) => {
     let errors = validationResult(req);
-
+    console.log(errors.errors);
+    console.log(
+      "🚀 ~ file: picturesController.js ~ line 8 ~ req.files",
+      req.files
+    );
     if (errors.isEmpty() && req.files.length > 0) {
       const promises = req.files.map((picture) =>
         db.Picture.create({
@@ -22,6 +26,58 @@ module.exports = {
           });
         })
         .catch((err) => console.log(err));
+    } else if (!errors.isEmpty() && req.files.length > 1) {
+      const validFormats = ["image/jpg", "image/jpeg", "image/png"];
+
+      const validFilesFormat = req.files.filter((x) =>
+        validFormats.includes(x.mimetype)
+      );
+      if (validFilesFormat.length > 1) {
+        const promises = validFilesFormat.map((picture) =>
+          db.Picture.create({
+            services_b_id: req.body.serviceId,
+            picture: picture.filename,
+          })
+        );
+        Promise.all(promises)
+          .then((pictures) => {
+            const filesOk = new Set(validFilesFormat);
+            const wrongFilesFormat = req.files.filter((file) => {
+              return !filesOk.has(file);
+            });
+            return res.json({
+              meta: {
+                status: 201,
+              },
+              data: pictures,
+              log: {
+                message: 'Data created OK but some file format were wrong and thus not created',
+                errors: errors.errors,
+                files: wrongFilesFormat,
+              },
+            });
+          })
+          .catch((err) => console.log(err));
+      } else {
+        return res.json({
+          meta: {
+            status: 400,
+          },
+          data: {
+            errors: errors.errors,
+            body: req.body,
+          },
+        });
+      }
+    } else if (errors.isEmpty() && req.files.length === 0) {
+      return res.json({
+        meta: {
+          status: 400,
+        },
+        data: {
+          message: 'All files were in wrong formats.'
+        },
+      });
     } else {
       return res.json({
         meta: {

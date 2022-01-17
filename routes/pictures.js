@@ -14,13 +14,25 @@ const picturesValidate = require("../middlewares/validation/picturesValidate");
 const pictureValidate = require("../middlewares/validation/pictureValidate");
 
 // Multer
+const fileFilter = (req, file, cb) => {
+  console.log(
+    "🚀 ~ file: pictures.js ~ line 19 ~ fileFILTEEEEEEEEEEEERRRRRR",
+    file
+  );
+
+  const validFormats = [".jpg", ".jpeg", ".png"];
+  if (!validFormats.includes(path.extname(file.originalname))) {
+    return cb(null, false);
+  } else {
+    cb(null, true);
+  }
+};
 const storage = multer.diskStorage({
   destination: function (req, files, cb) {
     let dirImage = path.join("public", "images");
     return cb(null, dirImage);
   },
   filename: function (req, file, cb) {
-    console.log("🚀 ~ file: pictures.js ~ line 23 ~ req", req);
     console.log("🚀 ~ file: pictures.js ~ line 23 ~ file", file);
 
     return cb(
@@ -32,13 +44,14 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
+  fileFilter: fileFilter
 });
 
 // Pictures Routes
 router.post(
   "/create",
   adminWebTokenMiddleware,
-  upload.array('pictures', 10),
+  upload.array("pictures", 10),
   picturesValidate,
   picturesController.create
 );
