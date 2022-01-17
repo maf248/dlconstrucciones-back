@@ -20,6 +20,9 @@ const storage = multer.diskStorage({
     return cb(null, dirImage);
   },
   filename: function (req, file, cb) {
+    console.log("🚀 ~ file: pictures.js ~ line 23 ~ req", req);
+    console.log("🚀 ~ file: pictures.js ~ line 23 ~ file", file);
+
     return cb(
       null,
       "Servicio-picture" + "_" + Date.now() + path.extname(file.originalname)
@@ -35,7 +38,7 @@ const upload = multer({
 router.post(
   "/create",
   adminWebTokenMiddleware,
-  upload.any("pictures"),
+  upload.array('pictures', 10),
   picturesValidate,
   picturesController.create
 );
