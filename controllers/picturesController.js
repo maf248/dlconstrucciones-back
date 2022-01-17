@@ -6,23 +6,22 @@ module.exports = {
     let errors = validationResult(req);
 
     if (errors.isEmpty() && req.files.length > 0) {
-      console.log(req.files);
-
-      req.files.forEach((picture) => {
+      const promises = req.files.map((picture) =>
         db.Picture.create({
           services_b_id: req.body.serviceId,
           picture: picture.filename,
         })
-          .then((pictures) => {
-            return res.json({
-              meta: {
-                status: 201,
-              },
-              data: pictures,
-            });
-          })
-          .catch((err) => console.log(err));
-      });
+      );
+      Promise.all(promises)
+        .then((pictures) => {
+          return res.json({
+            meta: {
+              status: 201,
+            },
+            data: pictures,
+          });
+        })
+        .catch((err) => console.log(err));
     } else {
       return res.json({
         meta: {
@@ -37,7 +36,7 @@ module.exports = {
   },
   edit: (req, res, next) => {
     let errors = validationResult(req);
-    console.log(req.file);
+
     if (errors.isEmpty()) {
       db.Picture.update(
         {
