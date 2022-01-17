@@ -488,11 +488,11 @@ module.exports = {
 
           async function main() {
             var transporter = nodemailer.createTransport({
-              service: "gmail",
+              service: process.env.NODEMAILER_SERVICE,
               secure: false,
               auth: {
-                user: "lnconstrucciones0@gmail.com",
-                pass: "pruebanodemailer",
+                user: process.env.NODEMAILER_USER,
+                pass: process.env.NODEMAILER_PASS,
               },
             });
 
@@ -658,11 +658,11 @@ module.exports = {
             //Send password restore email
             async function main() {
               var transporter = nodemailer.createTransport({
-                service: "gmail",
+                service: process.env.NODEMAILER_SERVICE,
                 secure: false,
                 auth: {
-                  user: "lnconstrucciones0@gmail.com",
-                  pass: "pruebanodemailer",
+                  user: process.env.NODEMAILER_USER,
+                  pass: process.env.NODEMAILER_PASS,
                 },
               });
 
