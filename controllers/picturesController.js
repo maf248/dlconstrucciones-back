@@ -26,7 +26,7 @@ module.exports = {
           });
         })
         .catch((err) => console.log(err));
-    } else if (!errors.isEmpty() && req.files.length > 1) {
+    } else if (!errors.isEmpty() && req.files && req.files.length > 1) {
       const validFormats = ["image/jpg", "image/jpeg", "image/png"];
 
       const validFilesFormat = req.files.filter((x) =>
