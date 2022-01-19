@@ -100,7 +100,7 @@ module.exports = {
   create: (req, res, next) => {
     let errors = validationResult(req);
 
-    if (errors.isEmpty()) {
+    if (errors.isEmpty() && req.file !== undefined) {
       db.Batch.create({
         categories_id: req.body.category,
         title: req.body.title,
@@ -118,6 +118,16 @@ module.exports = {
           });
         })
         .catch((err) => console.log(err));
+    } else if (errors.isEmpty() && req.file === undefined) {
+      return res.json({
+        meta: {
+          status: 400,
+        },
+        data: {
+          message:
+            "No se subio ninguna imagen, o solo fueron en formato incorrecto. Acepta jpg, png y jpeg",
+        },
+      });
     } else {
       return res.json({
         meta: {

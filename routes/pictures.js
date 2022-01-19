@@ -16,7 +16,7 @@ const pictureValidate = require("../middlewares/validation/pictureValidate");
 // Multer
 const fileFilter = (req, file, cb) => {
   const validFormats = [".jpg", ".jpeg", ".png"];
-  if (!validFormats.includes(path.extname(file.originalname))) {
+  if (!validFormats.includes(path.extname(file.originalname.toLowerCase()))) {
     return cb(null, false);
   } else {
     cb(null, true);
@@ -30,7 +30,10 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     return cb(
       null,
-      "Servicio-picture" + "_" + Date.now() + path.extname(file.originalname)
+      "Servicio-picture" +
+        "_" +
+        Date.now() +
+        path.extname(file.originalname.toLowerCase())
     );
   },
 });

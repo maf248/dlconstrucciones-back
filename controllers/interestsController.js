@@ -111,7 +111,8 @@ module.exports = {
           status: 400,
         },
         data: {
-          message: "No se subio ninguna imagen, o solo fueron en formato incorrecto. Acepta jpg, png y jpeg"
+          message:
+            "No se subio ninguna imagen, o solo fueron en formato incorrecto. Acepta jpg, png y jpeg",
         },
       });
     } else {

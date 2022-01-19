@@ -47,7 +47,8 @@ module.exports = {
               },
               data: pictures,
               log: {
-                message: 'Data created OK but some file format were wrong and thus not created',
+                message:
+                  "Data created OK but some file format were wrong and thus not created",
                 errors: errors.errors,
                 files: wrongFilesFormat,
               },
@@ -71,7 +72,7 @@ module.exports = {
           status: 400,
         },
         data: {
-          message: 'All files were in wrong formats.'
+          message: "All files were in wrong formats.",
         },
       });
     } else {

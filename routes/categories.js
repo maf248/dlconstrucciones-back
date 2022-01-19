@@ -13,6 +13,14 @@ const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware"
 const categoryValidate = require("../middlewares/validation/categoryValidate");
 
 // Multer
+const fileFilter = (req, file, cb) => {
+  const validFormats = [".jpg", ".jpeg", ".png"];
+  if (!validFormats.includes(path.extname(file.originalname.toLowerCase()))) {
+    return cb(null, false);
+  } else {
+    cb(null, true);
+  }
+};
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let dirImage = path.join("public", "images");
@@ -21,20 +29,40 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     return cb(
       null,
-      "Category" + "_" + Date.now() + path.extname(file.originalname)
+      "Category" +
+        "_" +
+        Date.now() +
+        path.extname(file.originalname.toLowerCase())
     );
   },
 });
 
 const upload = multer({
   storage: storage,
+  fileFilter: fileFilter,
 });
 
 // Categories Routes
-router.get('/', categoriesController.index);
-router.get('/:id', categoriesController.detail);
-router.post('/create', adminWebTokenMiddleware, upload.single('image'), categoryValidate, categoriesController.create);
-router.patch('/edit/:id', adminWebTokenMiddleware, upload.single('image'), categoryValidate, categoriesController.edit);
-router.delete('/delete/:id', adminWebTokenMiddleware, categoriesController.delete);
+router.get("/", categoriesController.index);
+router.get("/:id", categoriesController.detail);
+router.post(
+  "/create",
+  adminWebTokenMiddleware,
+  upload.single("image"),
+  categoryValidate,
+  categoriesController.create
+);
+router.patch(
+  "/edit/:id",
+  adminWebTokenMiddleware,
+  upload.single("image"),
+  categoryValidate,
+  categoriesController.edit
+);
+router.delete(
+  "/delete/:id",
+  adminWebTokenMiddleware,
+  categoriesController.delete
+);
 
 module.exports = router;

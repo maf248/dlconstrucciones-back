@@ -12,7 +12,8 @@ const enrollValidate = require("../middlewares/validation/enrollValidate");
 const profileValidate = require("../middlewares/validation/profileValidate");
 const avatarValidate = require("../middlewares/validation/avatarValidate");
 const roleValidate = require("../middlewares/validation/roleValidate");
-const restorePassMailValidate = require("../middlewares/validation/restorePassMailValidate");7
+const restorePassMailValidate = require("../middlewares/validation/restorePassMailValidate");
+7;
 const newPassValidate = require("../middlewares/validation/newPassValidate");
 
 // Importing middleware for protected routes
@@ -23,6 +24,14 @@ const emailValidateJWTMiddleware = require("../middlewares/emailValidateJWTMiddl
 const restorePassJWTMiddleware = require("../middlewares/restorePassJWTMiddleware");
 
 // Multer
+const fileFilter = (req, file, cb) => {
+  const validFormats = [".jpg", ".jpeg", ".png"];
+  if (!validFormats.includes(path.extname(file.originalname.toLowerCase()))) {
+    return cb(null, false);
+  } else {
+    cb(null, true);
+  }
+};
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let dirImage = path.join("public", "images", "users");
@@ -31,12 +40,15 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     return cb(
       null,
-      "Usuario" + "_" + Date.now() + path.extname(file.originalname)
+      "Usuario" +
+        "_" +
+        Date.now() +
+        path.extname(file.originalname.toLowerCase())
     );
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 /* GET home page. */
 router.post(
@@ -55,7 +67,12 @@ router.post(
 router.post("/identify", selfWebTokenMiddleware, usersController.identify);
 router.post("/login", usersController.login);
 router.post("/register", registrationValidate, usersController.register);
-router.post("/enroll", masterWebTokenMiddleware, enrollValidate, usersController.enroll);
+router.post(
+  "/enroll",
+  masterWebTokenMiddleware,
+  enrollValidate,
+  usersController.enroll
+);
 router.get(
   "/validate/:jwt",
   emailValidateJWTMiddleware,
