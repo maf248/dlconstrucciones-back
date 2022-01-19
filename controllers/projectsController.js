@@ -144,7 +144,7 @@ module.exports = {
         },
         data: {
           message:
-            "No se subio ninguna imagen, o solo fueron en formato incorrecto. Acepta jpg, png y jpeg",
+            "No se subio ningun excel, o fue en formato incorrecto. Solo acepta xls o xlsx",
         },
       });
     } else {

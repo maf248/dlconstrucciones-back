@@ -15,7 +15,7 @@ const projectValidate = require("../middlewares/validation/projectValidate");
 
 // Multer
 const fileFilter = (req, file, cb) => {
-  const validFormats = [".jpg", ".jpeg", ".png"];
+  const validFormats = [".xls", ".xlsx"];
   if (!validFormats.includes(path.extname(file.originalname.toLowerCase()))) {
     return cb(null, false);
   } else {
