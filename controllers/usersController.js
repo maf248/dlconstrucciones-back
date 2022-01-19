@@ -498,8 +498,9 @@ module.exports = {
 
           async function main() {
             var transporter = nodemailer.createTransport({
-              service: process.env.NODEMAILER_SERVICE,
-              secure: false,
+              host: process.env.NODEMAILER_HOST,
+              port: process.env.NODEMAILER_PORT,
+              secure: true,
               auth: {
                 user: process.env.NODEMAILER_USER,
                 pass: process.env.NODEMAILER_PASS,
@@ -668,8 +669,9 @@ module.exports = {
             //Send password restore email
             async function main() {
               var transporter = nodemailer.createTransport({
-                service: process.env.NODEMAILER_SERVICE,
-                secure: false,
+                host: process.env.NODEMAILER_HOST,
+                port: process.env.NODEMAILER_PORT,
+                secure: true,
                 auth: {
                   user: process.env.NODEMAILER_USER,
                   pass: process.env.NODEMAILER_PASS,

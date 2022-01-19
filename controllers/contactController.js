@@ -9,8 +9,9 @@ module.exports = {
       // async..await is not allowed in global scope, must use a wrapper
       async function main() {
         var transporter = nodemailer.createTransport({
-          service: process.env.NODEMAILER_SERVICE,
-          secure: false,
+          host: process.env.NODEMAILER_HOST,
+          port: process.env.NODEMAILER_PORT,
+          secure: true,
           auth: {
             user: process.env.NODEMAILER_USER,
             pass: process.env.NODEMAILER_PASS,
@@ -18,7 +19,7 @@ module.exports = {
         });
 
         var mailOptions = {
-          from: "lnconstrucciones0@gmail.com",
+          from: `${process.env.NODEMAILER_USER}`,
           to: `${req.body.email}`,
           subject: "Sending Email using Node.js",
           text: `${req.body.comment}`,
