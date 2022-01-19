@@ -508,7 +508,7 @@ module.exports = {
             });
 
             var mailOptions = {
-              from: "lnconstrucciones0@gmail.com",
+              from: `${process.env.NODEMAILER_USER}`,
               to: `${req.body.email}`,
               subject: "Verificación de email",
               text: `https://lnconstrucciones.herokuapp.com/api/users/validate/${validationToken}`,
@@ -679,7 +679,7 @@ module.exports = {
               });
 
               var mailOptions = {
-                from: "lnconstrucciones0@gmail.com",
+                from: `${process.env.NODEMAILER_USER}`,
                 to: `${req.body.email}`,
                 subject: "Recuperación de contraseña",
                 text: `https://lnconstrucciones.herokuapp.com/api/users/restorepass/${passRestoreToken}`,
