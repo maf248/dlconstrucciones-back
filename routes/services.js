@@ -11,9 +11,16 @@ const adminWebTokenMiddleware = require("../middlewares/adminWebTokenMiddleware"
 
 // Importing backend validations
 const serviceValidate = require("../middlewares/validation/serviceValidate");
-const picturesValidate = require("../middlewares/validation/picturesValidate");
 
 // Multer
+const fileFilter = (req, file, cb) => {
+  const validFormats = [".jpg", ".jpeg", ".png"];
+  if (!validFormats.includes(path.extname(file.originalname))) {
+    return cb(null, false);
+  } else {
+    cb(null, true);
+  }
+};
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let dirImage = path.join("public", "images");
@@ -29,6 +36,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
+  fileFilter: fileFilter,
 });
 
 // Services Routes

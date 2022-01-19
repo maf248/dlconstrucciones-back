@@ -15,11 +15,6 @@ const pictureValidate = require("../middlewares/validation/pictureValidate");
 
 // Multer
 const fileFilter = (req, file, cb) => {
-  console.log(
-    "🚀 ~ file: pictures.js ~ line 19 ~ fileFILTEEEEEEEEEEEERRRRRR",
-    file
-  );
-
   const validFormats = [".jpg", ".jpeg", ".png"];
   if (!validFormats.includes(path.extname(file.originalname))) {
     return cb(null, false);
@@ -33,8 +28,6 @@ const storage = multer.diskStorage({
     return cb(null, dirImage);
   },
   filename: function (req, file, cb) {
-    console.log("🚀 ~ file: pictures.js ~ line 23 ~ file", file);
-
     return cb(
       null,
       "Servicio-picture" + "_" + Date.now() + path.extname(file.originalname)
@@ -44,7 +37,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  fileFilter: fileFilter
+  fileFilter: fileFilter,
 });
 
 // Pictures Routes

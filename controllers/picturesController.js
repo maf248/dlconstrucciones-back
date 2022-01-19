@@ -3,13 +3,8 @@ const { validationResult } = require("express-validator");
 
 module.exports = {
   create: (req, res, next) => {
-    
     let errors = validationResult(req);
-    console.log(errors.errors);
-    console.log(
-      "🚀 ~ file: picturesController.js ~ line 8 ~ req.files",
-      req.files
-    );
+
     if (errors.isEmpty() && req.files.length > 0) {
       const promises = req.files.map((picture) =>
         db.Picture.create({
