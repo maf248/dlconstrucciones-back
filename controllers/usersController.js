@@ -495,7 +495,8 @@ module.exports = {
       })
         .then((value) => {
           //Send validation email
-
+          
+    console.log("🚀 ~ file: usersController.js ~ line 424 ~ errors", process.env.HOST)
           async function main() {
             var transporter = nodemailer.createTransport({
               host: process.env.NODEMAILER_HOST,
@@ -511,7 +512,7 @@ module.exports = {
               from: `${process.env.NODEMAILER_USER}`,
               to: `${req.body.email}`,
               subject: "Verificación de email",
-              text: `https://lnconstrucciones.herokuapp.com/api/users/validate/${validationToken}`,
+              text: `${process.env.HOST}/api/users/validate/${validationToken}`,
             };
 
             transporter.sendMail(mailOptions, function (error, info) {
@@ -645,7 +646,7 @@ module.exports = {
   },
   forgotpass: (req, res, next) => {
     let errors = validationResult(req);
-
+    
     if (errors.isEmpty()) {
       const payload = {
         check: true,
@@ -682,7 +683,7 @@ module.exports = {
                 from: `${process.env.NODEMAILER_USER}`,
                 to: `${req.body.email}`,
                 subject: "Recuperación de contraseña",
-                text: `https://lnconstrucciones.herokuapp.com/api/users/restorepass/${passRestoreToken}`,
+                text: `${process.env.HOST}/api/users/restorepass/${passRestoreToken}`,
               };
 
               transporter.sendMail(mailOptions, function (error, info) {
