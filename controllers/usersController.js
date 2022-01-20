@@ -450,7 +450,7 @@ module.exports = {
           user: user,
         },
       });
-    } else if (user.validation === null) {
+    } else if (user === null || user.validation === null) {
       res.json({
         meta: {
           status: 401,
