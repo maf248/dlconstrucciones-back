@@ -26,16 +26,26 @@ module.exports = [
     ),
   check("image")
     .custom((value, { req }) => {
-      switch (req.file.mimetype) {
-        case "image/jpg":
-          return ".jpg";
-        case "image/jpeg":
-          return ".jpeg";
-        case "image/png":
-          return ".png";
-        default:
-          return false;
+      if (req.file !== undefined && req.files === undefined) {
+        switch (req.file.mimetype) {
+          case "image/jpg":
+            return ".jpg";
+          case "image/jpeg":
+            return ".jpeg";
+          case "image/png":
+            return ".png";
+          default:
+            return false;
+        }
+      } else if (req.file === undefined && req.files !== undefined) {
+        return !req.files.some(
+          (e) =>
+            e.mimetype !== "image/jpg" &&
+            e.mimetype !== "image/jpeg" &&
+            e.mimetype !== "image/png"
+        );
       }
+      return false;
     })
     .optional()
     .withMessage("El archivo debe tener formato: jpg jpeg o png"),

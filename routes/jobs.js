@@ -48,7 +48,7 @@ router.get("/:id", jobsController.detail);
 router.post(
   "/create",
   adminWebTokenMiddleware,
-  upload.single("image"),
+  upload.array("image", 10),
   jobValidate,
   jobsController.create
 );

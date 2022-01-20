@@ -38,7 +38,7 @@ module.exports = {
   edit: (req, res, next) => {
     let errors = validationResult(req);
 
-    if (errors.isEmpty()) {
+    if (errors.isEmpty() && (req.body.description || req.body.title || req.file)) {
       db.Job.update(
         {
           types_id: req.body.type,
@@ -76,6 +76,15 @@ module.exports = {
           }
         })
         .catch((err) => console.log(err));
+    } else if (errors.isEmpty() && !(req.body.description && req.body.title && req.file)) { 
+      return res.json({
+        meta: {
+          status: 400,
+        },
+        data: {
+          message: 'La imagen que se mando fue en formato incorrecto. Formatos validos jpg jpeg y png'
+        },
+      });
     } else {
       return res.json({
         meta: {
@@ -91,23 +100,24 @@ module.exports = {
   create: (req, res, next) => {
     let errors = validationResult(req);
 
-    if (errors.isEmpty() && req.file !== undefined) {
-      db.Job.create({
-        types_id: req.body.type,
-        title: req.body.title,
-        description: req.body.description,
-        image: req.file?.filename,
-      })
-        .then((job) => {
+    if (errors.isEmpty() && req.files.length > 0) {
+      const promises = req.files.map((picture) =>
+        db.Job.create({
+          types_id: req.body.type,
+          image: picture.filename,
+        })
+      );
+      Promise.all(promises)
+        .then((jobs) => {
           return res.json({
             meta: {
               status: 201,
             },
-            data: job,
+            data: jobs,
           });
         })
         .catch((err) => console.log(err));
-    } else if (errors.isEmpty() && req.file === undefined) {
+    } else if (errors.isEmpty() && req.files.length === 0) {
       return res.json({
         meta: {
           status: 400,
