@@ -119,14 +119,14 @@ module.exports = {
   create: (req, res, next) => {
     let errors = validationResult(req);
 
-    if (errors.isEmpty() && req.file !== undefined) {
+    if (errors.isEmpty()) {
       db.Project.create({
         users_id: req.body.user,
         title: req.body.title,
         description: req.body.description,
         total: req.body.total,
         balance: req.body.total,
-        cashflow: req.file?.filename,
+        cashflow: req.file?.filename || null,
       })
         .then((project) => {
           return res.json({
@@ -137,16 +137,6 @@ module.exports = {
           });
         })
         .catch((err) => console.log(err));
-    } else if (errors.isEmpty() && req.file === undefined) {
-      return res.json({
-        meta: {
-          status: 400,
-        },
-        data: {
-          message:
-            "No se subio ningun excel, o fue en formato incorrecto. Solo acepta xls o xlsx",
-        },
-      });
     } else {
       return res.json({
         meta: {
