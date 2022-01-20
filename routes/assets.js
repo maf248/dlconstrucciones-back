@@ -14,7 +14,7 @@ const assetValidate = require("../middlewares/validation/assetValidate");
 
 // Multer
 const fileFilter = (req, file, cb) => {
-  const validFormats = [".jpg", ".jpeg", ".png"];
+  const validFormats = [".jpg", ".jpeg", ".png", ".mp4", ".wmv", ".mkv", ".mov", ".avi"];
   if (!validFormats.includes(path.extname(file.originalname.toLowerCase()))) {
     return cb(null, false);
   } else {
