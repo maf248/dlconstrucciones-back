@@ -57,23 +57,26 @@ module.exports = {
   },
   create: (req, res, next) => {
     let errors = validationResult(req);
-
-    if (errors.isEmpty() && req.file !== undefined) {
-      db.Asset.create({
-        projects_id: req.body.projects_id,
-        asset: req.file.filename,
-        type: assetTypeSetter(req.file.mimetype),
-      })
-        .then((asset) => {
+    
+    if (errors.isEmpty() && req.files.length > 0) {
+      const promises = req.files.map((asset) =>
+        db.Asset.create({
+          projects_id: req.body.projects_id,
+          asset: asset.filename,
+          type: assetTypeSetter(asset.mimetype),
+        })
+      );
+      Promise.all(promises)
+        .then((assets) => {
           return res.json({
             meta: {
               status: 201,
             },
-            data: asset,
+            data: assets,
           });
         })
         .catch((err) => console.log(err));
-    } else if (errors.isEmpty() && req.file === undefined) {
+    } else if (errors.isEmpty() && (req.files === undefined || req.files.length < 1)) {
       return res.json({
         meta: {
           status: 400,

@@ -26,27 +26,44 @@ module.exports = [
     ),
   check("asset")
     .custom((value, { req }) => {
-      switch (req.file.mimetype) {
-        case "image/jpg":
-          return ".jpg";
-        case "image/jpeg":
-          return ".jpeg";
-        case "image/png":
-          return ".png";
-        case "video/mp4":
-          return ".mp4";
-        case "video/quicktime":
-          return ".mov";
-        case "video/x-msvideo":
-          return ".avi";
-        case "video/x-ms-wmv":
-          return ".wmv";
-        case "video/x-matroska":
-          return ".mkv";
-        default:
-          return false;
+      if (req.file !== undefined && req.files === undefined) {
+        switch (req.file.mimetype) {
+          case "image/jpg":
+            return ".jpg";
+          case "image/jpeg":
+            return ".jpeg";
+          case "image/png":
+            return ".png";
+          case "video/mp4":
+            return ".mp4";
+          case "video/quicktime":
+            return ".mov";
+          case "video/x-msvideo":
+            return ".avi";
+          case "video/x-ms-wmv":
+            return ".wmv";
+          case "video/x-matroska":
+            return ".mkv";
+          default:
+            return false;
+        }
+      } else if (req.file === undefined && req.files !== undefined) {
+        return !req.files.some(
+          (e) =>
+            e.mimetype !== "image/jpg" &&
+            e.mimetype !== "image/jpeg" &&
+            e.mimetype !== "image/png" &&
+            e.mimetype !== "video/mp4" &&
+            e.mimetype !== "video/quicktime" &&
+            e.mimetype !== "video/x-msvideo" &&
+            e.mimetype !== "video/x-ms-wmv" &&
+            e.mimetype !== "video/x-matroska"
+        );
       }
+      return false;
     })
     .optional()
-    .withMessage("El archivo debe tener formato: jpg jpeg o png en caso de imagen. Formatos mp4 mov avi wmv o mkv para videos."),
+    .withMessage(
+      "El archivo debe tener formato: jpg jpeg o png en caso de imagen. Formatos mp4 mov avi wmv o mkv para videos."
+    ),
 ];

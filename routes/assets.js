@@ -43,7 +43,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.post(
   "/create",
   masterWebTokenMiddleware,
-  upload.single("asset"),
+  upload.array("asset", 10),
   assetValidate,
   assetsController.create
 );
