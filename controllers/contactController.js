@@ -37,7 +37,7 @@ module.exports = {
 
         var mailClientFormOptions = {
           from: `${process.env.NODEMAILER_USER}`,
-          to: `${process.env.NODEMAILER_USER}`,
+          to: `${req.body.email}`,
           subject: "Recibiste una consulta del sitio web - DLN Construcciones",
           html: constactClientHtml(req.body.email, req.body.comment),
         };
