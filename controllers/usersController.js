@@ -5,6 +5,8 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const { validationResult } = require("express-validator");
+const validateUserHtml = require("../helpers/validateUserHtml");
+const newPassHtml = require("../helpers/newPassHtml");
 
 const config = require("../configs/config");
 
@@ -495,8 +497,11 @@ module.exports = {
       })
         .then((value) => {
           //Send validation email
-          
-    console.log("🚀 ~ file: usersController.js ~ line 424 ~ errors", process.env.HOST)
+
+          console.log(
+            "🚀 ~ file: usersController.js ~ line 424 ~ errors",
+            process.env.HOST
+          );
           async function main() {
             var transporter = nodemailer.createTransport({
               host: process.env.NODEMAILER_HOST,
@@ -511,8 +516,11 @@ module.exports = {
             var mailOptions = {
               from: `${process.env.NODEMAILER_USER}`,
               to: `${req.body.email}`,
-              subject: "Verificación de email",
-              text: `${process.env.HOST}/api/users/validate/${validationToken}`,
+              subject: "Verificación de email - DLN Construcciones",
+              html: validateUserHtml(
+                req.body.email,
+                `${process.env.HOST}/api/users/validate/${validationToken}`
+              ),
             };
 
             transporter.sendMail(mailOptions, function (error, info) {
@@ -646,7 +654,7 @@ module.exports = {
   },
   forgotpass: (req, res, next) => {
     let errors = validationResult(req);
-    
+
     if (errors.isEmpty()) {
       const payload = {
         check: true,
@@ -682,8 +690,11 @@ module.exports = {
               var mailOptions = {
                 from: `${process.env.NODEMAILER_USER}`,
                 to: `${req.body.email}`,
-                subject: "Recuperación de contraseña",
-                text: `${process.env.HOST}/api/users/restorepass/${passRestoreToken}`,
+                subject: "Recuperación de contraseña - DLN Construcciones",
+                html: newPassHtml(
+                  req.body.email,
+                  `${process.env.HOST}/api/users/restorepass/${passRestoreToken}`
+                ),
               };
 
               transporter.sendMail(mailOptions, function (error, info) {

@@ -36,7 +36,7 @@ contactClientHtml = (email, comment) => {
                       <td style="padding:0 0 36px 0;color:#153643;">
                         <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Recibiste una consulta desde la página web:</h1>
                         <hr>
-                        <p><i>${new Date()}</i></p>
+                        <p><i>${new Date().toLocaleDateString('es-AR', {hour:'2-digit', minute:'2-digit', timeZone: 'America/Argentina/Buenos_Aires'})}</i></p>
                         <br>
                         <p style="margin:0px;font-size:16px;line-height:24px;text-align:center;font-family:Arial,sans-serif;"><i>"${comment}"</i></p>
                         <br>

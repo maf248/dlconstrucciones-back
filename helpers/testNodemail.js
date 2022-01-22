@@ -18,7 +18,7 @@ async function main() {
       from: "lnconstrucciones0@gmail.com",
       to: "mafmaggot@gmail.com",
       subject: "Recibimos tu consulta - DLN Construcciones",
-      html: contactFormHtml("pepe@gmail.com", "http://www.google.com.ar"),
+      html: contactClientHtml("pepe@gmail.com", "http://www.google.com.ar"),
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
