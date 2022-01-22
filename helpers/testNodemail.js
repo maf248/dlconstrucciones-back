@@ -1,5 +1,8 @@
 const nodemailer = require("nodemailer");
 const contactFormHtml = require("./contactFormHtml");
+const contactClientHtml = require("./contactClientHtml");
+const validateUserHtml = require("./validateUserHtml");
+const newPassHtml = require("./newPassHtml");
 
 async function main() {
     var transporter = nodemailer.createTransport({
@@ -14,8 +17,8 @@ async function main() {
     var mailOptions = {
       from: "lnconstrucciones0@gmail.com",
       to: "mafmaggot@gmail.com",
-      subject: "Sending Email using Node.js",
-      html: contactFormHtml("pepe@gmail.com", "Mensaje de prueba de pepe"),
+      subject: "Recibimos tu consulta - DLN Construcciones",
+      html: contactFormHtml("pepe@gmail.com", "http://www.google.com.ar"),
     };
 
     transporter.sendMail(mailOptions, function (error, info) {

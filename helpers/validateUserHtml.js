@@ -1,4 +1,4 @@
-contactFormHtml = (email, comment) => {
+validateUserHtml = (email, link) => {
     return `<!DOCTYPE html>
     <html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
@@ -33,18 +33,15 @@ contactFormHtml = (email, comment) => {
                 <td style="padding:36px 30px 42px 30px;">
                   <table role="presentation" style="width:100%;border-collapse:collapse;border:0;border-spacing:0;">
                     <tr>
-                      <td style="padding:0px;color:#153643;">
-                        <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">Recibimos tu consulta en nuestra página web:</h1>
+                      <td style="padding:0 0 20px 0;color:#153643;">
+                        <h1 style="font-size:24px;margin:0 0 20px 0;font-family:Arial,sans-serif;">¡Bienvenido! Validá tu cuenta:</h1>
                         <hr>
                         <br>
-                        <p style="margin:0px;font-size:16px;line-height:24px;text-align:center;font-family:Arial,sans-serif;"><i>"${comment}"</i></p>
+                        <p style="margin:0 0 12px 0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">Muchas gracias por registrarte, accedé a tu cuenta validando tu email.<br>Haz click <a href="${link}">aquí</a></p>
                         <br>
                         <hr>
-                        <br>
-                        <p style="margin:0;font-size:16px;line-height:24px;font-family:Arial,sans-serif;">¡Muchas gracias!<br><br>En breve recibirás una respuesta a tu casilla de correo: ${email}</p>
                       </td>
                     </tr>
-                   
                   </table>
                 </td>
               </tr>
@@ -81,4 +78,4 @@ contactFormHtml = (email, comment) => {
     </html>`;
 };
 
-module.exports = contactFormHtml;
+module.exports = validateUserHtml;

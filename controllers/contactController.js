@@ -1,5 +1,7 @@
 const { validationResult } = require("express-validator");
 const nodemailer = require("nodemailer");
+const contactFormHtml = require("../helpers/contactFormHtml");
+const constactClientHtml = require("../helpers/contactClientHtml");
 
 module.exports = {
   contact: (req, res, next) => {
@@ -18,14 +20,29 @@ module.exports = {
           },
         });
 
-        var mailOptions = {
+        var mailContactFormOptions = {
           from: `${process.env.NODEMAILER_USER}`,
           to: `${req.body.email}`,
-          subject: "Sending Email using Node.js",
-          text: `${req.body.comment}`,
+          subject: "Recibimos tu consulta - DLN Construcciones",
+          html: contactFormHtml(req.body.email, req.body.comment),
         };
 
-        transporter.sendMail(mailOptions, function (error, info) {
+        transporter.sendMail(mailContactFormOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+          }
+        });
+
+        var mailClientFormOptions = {
+          from: `${process.env.NODEMAILER_USER}`,
+          to: `${req.body.email}`,
+          subject: "Recibiste una consulta del sitio web - DLN Construcciones",
+          html: constactClientHtml(req.body.email, req.body.comment),
+        };
+
+        transporter.sendMail(mailClientFormOptions, function (error, info) {
           if (error) {
             console.log(error);
           } else {
@@ -43,7 +60,7 @@ module.exports = {
             data: {
               email: req.body.email,
               comment: req.body.comment,
-              message: "Email Sent Correctly",
+              message: "Emails Sent Correctly",
             },
           })
         )
