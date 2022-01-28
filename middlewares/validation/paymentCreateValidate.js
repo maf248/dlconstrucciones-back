@@ -57,21 +57,14 @@ module.exports = [
         req.body.coin === "ARS" ? req.body.cotizacionUsd : null;
       const subTotal = req.body.iva ? req.body.amount / 1.21 : req.body.amount;
       const totalUsd = () => {
-        if (req.body.coin === "USD" && !req.body.iva) {
+        if (req.body.coin === "USD") {
           return req.body.amount;
-        } else if (req.body.coin === "USD" && req.body.iva === true) {
-          return subTotal;
-        } else if (req.body.coin === "ARS" && req.body.iva) {
-          return subTotal / req.body.cotizacionUsd;
-        } else if (req.body.coin === "ARS" && !req.body.iva) {
+        } else if (req.body.coin === "ARS") {
           return req.body.amount / req.body.cotizacionUsd;
         }
         return null;
       };
-      console.log(
-        "🚀 ~ file: paymentsController.js ~ line 100 ~ totalUsd ~ totalUsd",
-        totalUsd()
-      );
+ 
       try {
         project = await db.Project.findOne({
           where: {
