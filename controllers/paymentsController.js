@@ -5,14 +5,36 @@ const { restart } = require("nodemon");
 module.exports = {
   edit: (req, res, next) => {
     let errors = validationResult(req);
+    const cotizacionUsd =
+      req.body.coin === "ARS" ? req.body.cotizacionUsd : null;
+    const subTotal = req.body.iva ? req.body.amount / 1.21 : null;
+    const totalUsd = () => {
+      if (req.body.coin === "USD" && !req.body.iva) {
+        return req.body.amount;
+      } else if (req.body.coin === "USD" && req.body.iva === true) {
+        return subTotal;
+      } else if (req.body.coin === "ARS" && req.body.iva) {
+        return subTotal / req.body.cotizacionUsd;
+      } else if (req.body.coin === "ARS" && !req.body.iva) {
+        return req.body.amount / req.body.cotizacionUsd;
+      }
+      return null;
+    };
 
     if (errors.isEmpty()) {
       db.Payment.update(
         {
           projects_id: req.body.projects_id,
+          coin: req.body.coin,
+          cotizacionUsd: cotizacionUsd,
+          totalUsd: totalUsd(),
+          subTotal: subTotal,
           amount: req.body.amount,
           receipt: req.body.receipt,
           datetime: req.body.datetime,
+          description: req.body.description,
+          iva: req.body.iva.toString(),
+          wayToPay: req.body.wayToPay,
         },
         {
           where: {
@@ -25,7 +47,7 @@ module.exports = {
         .then((payment) => {
           if (payment[0]) {
             // Update project balance acording to all payments after creating new payment
-            db.Payment.sum("amount", {
+            db.Payment.sum("totalUsd", {
               where: {
                 projects_id: req.body.projects_id,
               },
@@ -82,18 +104,40 @@ module.exports = {
   },
   create: (req, res, next) => {
     let errors = validationResult(req);
+    const cotizacionUsd =
+      req.body.coin === "ARS" ? req.body.cotizacionUsd : null;
+    const subTotal = req.body.iva ? req.body.amount / 1.21 : null;
+    const totalUsd = () => {
+      if (req.body.coin === "USD" && !req.body.iva) {
+        return req.body.amount;
+      } else if (req.body.coin === "USD" && req.body.iva === true) {
+        return subTotal;
+      } else if (req.body.coin === "ARS" && req.body.iva) {
+        return subTotal / req.body.cotizacionUsd;
+      } else if (req.body.coin === "ARS" && !req.body.iva) {
+        return req.body.amount / req.body.cotizacionUsd;
+      }
+      return null;
+    };
 
     if (errors.isEmpty()) {
       db.Payment.create({
         projects_id: req.body.projects_id,
+        coin: req.body.coin,
+        cotizacionUsd: cotizacionUsd,
+        totalUsd: totalUsd(),
+        subTotal: subTotal,
         amount: req.body.amount,
         receipt: req.body.receipt,
         datetime: req.body.datetime,
+        description: req.body.description,
+        iva: req.body.iva.toString(),
+        wayToPay: req.body.wayToPay,
       })
         .then((payment) => {
           if (payment) {
             // Update project balance acording to all payments after creating new payment
-            db.Payment.sum("amount", {
+            db.Payment.sum("totalUsd", {
               where: {
                 projects_id: req.body.projects_id,
               },
@@ -164,7 +208,7 @@ module.exports = {
             .then((x) => {
               if (x) {
                 // Update project balance acording to all payments after creating new payment
-                db.Payment.sum("amount", {
+                db.Payment.sum("totalUsd", {
                   where: {
                     projects_id: payment.projects_id,
                   },

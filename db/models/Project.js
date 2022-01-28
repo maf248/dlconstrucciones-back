@@ -15,11 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     total: {
-      type: DataTypes.BIGINT.UNSIGNED,
+      type: DataTypes.DECIMAL.UNSIGNED,
       allowNull: false,
     },
     balance: {
-      type: DataTypes.BIGINT.UNSIGNED,
+      type: DataTypes.DECIMAL.UNSIGNED,
       allowNull: true,
     },
     cashflow: {

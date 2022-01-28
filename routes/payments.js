@@ -13,7 +13,7 @@ const paymentEditValidate = require("../middlewares/validation/paymentEditValida
 
 // Payment Routes
 router.post('/create', masterWebTokenMiddleware, paymentCreateValidate, paymentsController.create);
-router.patch('/edit/:id', masterWebTokenMiddleware, paymentEditValidate, paymentsController.edit);
+router.patch('/edit/:id', masterWebTokenMiddleware, paymentCreateValidate, paymentsController.edit);
 router.delete('/delete/:id', masterWebTokenMiddleware, paymentsController.delete);
 
 module.exports = router;

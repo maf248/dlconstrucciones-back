@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `dln-construcciones`.`users` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `hash_id_UNIQUE` (`hash_id` ASC),
   UNIQUE INDEX `validation_UNIQUE` (`validation` ASC),
-  UNIQUE INDEX `restorepass_UNIQUE` (`restorepass` ASC))
+  UNIQUE INDEX `restore_UNIQUE` (`restorepass` ASC))
 ENGINE = InnoDB;
 
 
@@ -191,8 +191,8 @@ CREATE TABLE IF NOT EXISTS `dln-construcciones`.`projects` (
   `users_id` BIGINT UNSIGNED NOT NULL,
   `title` VARCHAR(100) NULL DEFAULT NULL,
   `description` TEXT NULL DEFAULT NULL,
-  `total` BIGINT UNSIGNED NOT NULL,
-  `balance` BIGINT UNSIGNED NULL DEFAULT NULL,
+  `total` DECIMAL(65,2) UNSIGNED NOT NULL,
+  `balance` DECIMAL(65,2) UNSIGNED NULL DEFAULT NULL,
   `cashflow` VARCHAR(100) NULL DEFAULT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -234,9 +234,16 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `dln-construcciones`.`payments` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `projects_id` BIGINT UNSIGNED NOT NULL,
-  `amount` BIGINT UNSIGNED NOT NULL,
+  `coin` ENUM('ARS', 'USD') NOT NULL,
+  `cotizacionUsd` DECIMAL(65,2) UNSIGNED NULL DEFAULT NULL,
+  `totalUsd` DECIMAL(65,2) UNSIGNED NOT NULL,
+  `subTotal` DECIMAL(65,2) UNSIGNED NULL DEFAULT NULL,
+  `amount` DECIMAL(65,2) UNSIGNED NOT NULL,
   `receipt` VARCHAR(100) NULL DEFAULT NULL,
   `datetime` DATETIME NOT NULL,
+  `description` VARCHAR(100) NOT NULL,
+  `iva` ENUM('true', 'false') NOT NULL DEFAULT 'false',
+  `wayToPay` ENUM('Efectivo', 'Transferencia') NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `updated_at` TIMESTAMP NOT NULL DEFAULT NOW(),
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,

@@ -6,8 +6,24 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       allowNull: false,
     },
+    coin: {
+      type: DataTypes.ENUM("ARS", "USD"),
+      allowNull: false,
+    },
+    cotizacionUsd: {
+      type: DataTypes.DECIMAL.UNSIGNED,
+      allowNull: true,
+    },
+    totalUsd: {
+      type: DataTypes.DECIMAL.UNSIGNED,
+      allowNull: false,
+    },
+    subTotal: {
+      type: DataTypes.DECIMAL.UNSIGNED,
+      allowNull: true,
+    },
     amount: {
-      type: DataTypes.BIGINT.UNSIGNED,
+      type: DataTypes.DECIMAL.UNSIGNED,
       allowNull: false,
     },
     receipt: {
@@ -17,6 +33,15 @@ module.exports = (sequelize, DataTypes) => {
     datetime: {
       type: DataTypes.DATE,
       allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    iva: {
+      type: DataTypes.ENUM("true", "false"),
+      allowNull: false,
+      defaultValue: "false",
     },
     created_at: {
       type: DataTypes.DATE,
