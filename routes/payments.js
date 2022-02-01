@@ -8,12 +8,11 @@ const paymentsController = require("../controllers/paymentsController");
 const masterWebTokenMiddleware = require("../middlewares/masterWebTokenMiddleware");
 
 // Importing backend validations
-const paymentCreateValidate = require("../middlewares/validation/paymentCreateValidate");
-const paymentEditValidate = require("../middlewares/validation/paymentEditValidate");
+const paymentValidate = require("../middlewares/validation/paymentValidate");
 
 // Payment Routes
-router.post('/create', masterWebTokenMiddleware, paymentCreateValidate, paymentsController.create);
-router.patch('/edit/:id', masterWebTokenMiddleware, paymentCreateValidate, paymentsController.edit);
+router.post('/create', masterWebTokenMiddleware, paymentValidate, paymentsController.create);
+router.patch('/edit/:id', masterWebTokenMiddleware, paymentValidate, paymentsController.edit);
 router.delete('/delete/:id', masterWebTokenMiddleware, paymentsController.delete);
 
 module.exports = router;

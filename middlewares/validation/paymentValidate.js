@@ -55,16 +55,18 @@ module.exports = [
       let project;
       const cotizacionUsd =
         req.body.coin === "ARS" ? req.body.cotizacionUsd : null;
-      const subTotal = req.body.iva ? req.body.amount / 1.21 : req.body.amount;
+      const subTotal = req.body.iva ? req.body.amount / 1.21 : null;
       const totalUsd = () => {
         if (req.body.coin === "USD") {
-          return req.body.amount;
+          return req.body.iva ? subTotal : req.body.amount;
         } else if (req.body.coin === "ARS") {
-          return req.body.amount / req.body.cotizacionUsd;
+          return req.body.iva
+            ? subTotal / req.body.cotizacionUsd
+            : req.body.amount / req.body.cotizacionUsd;
         }
         return null;
       };
- 
+
       try {
         project = await db.Project.findOne({
           where: {
