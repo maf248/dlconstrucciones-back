@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    wayToPay: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     iva: {
       type: DataTypes.ENUM("true", "false"),
       allowNull: false,
