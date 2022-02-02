@@ -66,9 +66,4 @@ INSERT INTO contents (services_a_id, subtitle, text) VALUES
 
 
 INSERT INTO users (hash_id, first_name, last_name, email, password, dni, role) VALUES 
-('$2a$10$1EHxHf5rQ.gyJ2xnJ55sFeHVnMlxbXReGoaFC1ID/dhumC8mGG8Ii','Tobias','Blaksley','tobias.blaksley@hotmail.com','$2a$10$nY9qIx.MJ4cXVG5csGpFFeQzQl4J2h0zhT.VndbdlnZOGzYjdbcmW',NULL,'master'),
-('$2a$10$qpbUssE9j0VlJYCAlUeDweZLwvsKpHYOM9aJ7TjAAGyBLH.5xmmbu','Marcelo','Fanego','mafmaggot@gmail.com','$2a$10$MHA8vyzxjf4h8rg.WVSPEeXvh9ZX5Uv/a9s58zz70WrnOQdkNLMhW',35960622,'admin');
-
-INSERT INTO projects (users_id, total, balance, description) VALUES
-(1,1500,1500,'Este es un proyecto con descripción'),
-(2,2500,2500,'Descripción de prueba');
+('$2a$10$1EHxHf5rQ.gyJ2xnJ55sFeHVnMlxbXReGoaFC1ID/dhumC8mGG8Ii','Tobias','Blaksley','tobias.blaksley@hotmail.com','$2a$10$nY9qIx.MJ4cXVG5csGpFFeQzQl4J2h0zhT.VndbdlnZOGzYjdbcmW',NULL,'master');
