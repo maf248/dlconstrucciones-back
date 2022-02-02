@@ -70,9 +70,5 @@ INSERT INTO users (hash_id, first_name, last_name, email, password, dni, role) V
 ('$2a$10$qpbUssE9j0VlJYCAlUeDweZLwvsKpHYOM9aJ7TjAAGyBLH.5xmmbu','Marcelo','Fanego','mafmaggot@gmail.com','$2a$10$MHA8vyzxjf4h8rg.WVSPEeXvh9ZX5Uv/a9s58zz70WrnOQdkNLMhW',35960622,'admin');
 
 INSERT INTO projects (users_id, total, balance, description) VALUES
-(1,1500,1400,'Este es un proyecto con descripción'),
-(2,2500,2200,'Descripción de prueba');
-
-INSERT INTO payments (projects_id, coin, cotizacionUsd, totalUsd, amount, subTotal, iva, receipt, description, wayToPay, datetime) VALUES
-(1, 'USD', 195, 100, 19500, 4095, 'true','092384023948230948', 'Adelanto pileta', 'Transferencia', '2020-01-01 10:10:10'),
-(2,'ARS', NULL, 300, 60000, 0, 'false','BA2384023934534550', 'Materiales', 'Efectivo', '2020-01-01 10:10:10');
+(1,1500,1500,'Este es un proyecto con descripción'),
+(2,2500,2500,'Descripción de prueba');
