@@ -498,10 +498,6 @@ module.exports = {
         .then((value) => {
           //Send validation email
 
-          console.log(
-            "🚀 ~ file: usersController.js ~ line 424 ~ errors",
-            process.env.HOST
-          );
           async function main() {
             var transporter = nodemailer.createTransport({
               host: process.env.NODEMAILER_HOST,
