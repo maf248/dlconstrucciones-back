@@ -50,7 +50,7 @@ module.exports = {
           categories_id: req.body.category,
           title: req.body.title,
           description: req.body.description,
-          image: req.file?.filename,
+          image: req.file ? req.file.filename : undefined,
           price: req.body.price,
           sold: req.body.sold,
         },
@@ -105,7 +105,7 @@ module.exports = {
         categories_id: req.body.category,
         title: req.body.title,
         description: req.body.description,
-        image: req.file?.filename,
+        image: req.file ? req.file.filename : undefined,
         price: req.body.price,
         sold: req.body.sold,
       })

@@ -51,7 +51,7 @@ module.exports = {
       db.Service.update(
         {
           title: req.body.title,
-          image: req.file?.filename,
+          image: req.file ? req.file.filename : undefined,
         },
         {
           where: {
@@ -101,7 +101,7 @@ module.exports = {
     if (errors.isEmpty() && req.file !== undefined) {
       db.Service.create({
         title: req.body.title,
-        image: req.file?.filename,
+        image: req.file ? req.file.filename : undefined,
       })
         .then((service) => {
           return res.json({

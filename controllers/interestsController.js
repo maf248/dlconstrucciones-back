@@ -43,7 +43,7 @@ module.exports = {
         {
           title: req.body.title,
           description: req.body.description,
-          image: req.file?.filename,
+          image: req.file ? req.file.filename : undefined,
         },
         {
           where: {
@@ -94,7 +94,7 @@ module.exports = {
       db.Interest.create({
         title: req.body.title,
         description: req.body.description,
-        image: req.file?.filename,
+        image: req.file ? req.file.filename : undefined,
       })
         .then((interest) => {
           return res.json({

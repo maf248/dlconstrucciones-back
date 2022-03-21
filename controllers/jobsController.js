@@ -44,7 +44,7 @@ module.exports = {
           types_id: req.body.type,
           title: req.body.title,
           description: req.body.description,
-          image: req.file?.filename,
+          image: req.file ? req.file.filename : undefined,
         },
         {
           where: {
