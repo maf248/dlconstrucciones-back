@@ -21,7 +21,7 @@ const contactRouter = require("./routes/contact");
 const usersRouter = require("./routes/users");
 
 const app = express();
-const port = Number(process.env.PORT || 443);
+const port = Number(process.env.PORT || 3000);
 
 app.use(logger("dev"));
 app.use(express.json());
