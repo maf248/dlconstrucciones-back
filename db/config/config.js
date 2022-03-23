@@ -17,7 +17,7 @@ module.exports = {
     username: "dlnconst_main",
     password: "Juan.Iraola.2022",
     database: "dlnconst_main",
-    host: "localhost:3306",
+    host: "127.0.0.1",
     dialect: "mysql",
   },
 };
