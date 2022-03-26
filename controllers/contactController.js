@@ -33,6 +33,10 @@ module.exports = {
         transporter.sendMail(mailContactFormOptions, function (error, info) {
           if (error) {
             console.log(error);
+            fs.appendFileSync('../errors-log.txt', ", \n" + JSON.stringify({
+              mensaje: error,
+              lugar: `transporter.sendmail - contactController.js - nodemailer`
+            }))
           } else {
             console.log("Email sent: " + info.response);
           }
