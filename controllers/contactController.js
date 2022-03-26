@@ -36,7 +36,7 @@ module.exports = {
               ", \n" +
                 JSON.stringify({
                   mensaje: error,
-                  lugar: `transporter.sendmail - contactController.js - nodemailer`,
+                  lugar: `transporter.sendmail IF ERROR - contactController.js - nodemailer`,
                 })
             );
           } else {
@@ -45,8 +45,8 @@ module.exports = {
               "../errors-log.txt",
               ", \n" +
                 JSON.stringify({
-                  mensaje: "ok",
-                  lugar: `transporter.sendmail - contactController.js - nodemailer`,
+                  mensaje: JSON.stringify(info),
+                  lugar: `transporter.sendmail ELSE NO ERROR - contactController.js - nodemailer`,
                 })
             );
           }
@@ -94,7 +94,7 @@ module.exports = {
             ", \n" +
               JSON.stringify({
                 mensaje: "ok",
-                lugar: `transporter.sendmail - contactController.js - nodemailer`,
+                lugar: `main - then() - contactController.js - nodemailer`,
               })
           );
         })
@@ -105,7 +105,7 @@ module.exports = {
             ", \n" +
               JSON.stringify({
                 mensaje: err,
-                lugar: `catch - nodemailer - contactController.js`,
+                lugar: `main - catch() - nodemailer - contactController.js`,
               })
           );
         });
