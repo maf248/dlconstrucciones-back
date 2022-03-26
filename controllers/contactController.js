@@ -20,7 +20,8 @@ module.exports = {
             pass: process.env.NODEMAILER_PASS,
           },
           tls: {
-            rejectUnauthorized: false
+            rejectUnauthorized: false,
+            servername: "c1441202.ferozo.com"
           }
         });
 
