@@ -48,7 +48,7 @@ module.exports = {
         transporter.sendMail(mailClientFormOptions, function (error, info) {
           if (error) {
             console.log(error);
-            fs.appendFileSync('../errors-log.json', JSON.stringify({
+            fs.appendFileSync('../errors-log.txt', ", \n" + JSON.stringify({
               error,
               lugar: `transporter.sendmail - contactController.js - nodemailer`
             }))
@@ -73,7 +73,7 @@ module.exports = {
         )
         .catch(err => {
           console.error(err);
-          fs.appendFileSync('../errors-log.json', JSON.stringify({
+          fs.appendFileSync('../errors-log.txt', ", \n" + JSON.stringify({
             error: err,
             lugar: `catch - nodemailer - contactController.js`
           }))
