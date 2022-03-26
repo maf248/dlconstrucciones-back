@@ -9,7 +9,7 @@ module.exports = {
     let errors = validationResult(req);
 
     if (errors.isEmpty()) {
-      // async..await is not allowed in global scope, must use a wrapper
+      
       async function main() {
         var transporter = nodemailer.createTransport({
           host: process.env.NODEMAILER_HOST,
@@ -45,35 +45,35 @@ module.exports = {
               "../errors-log.txt",
               ", \n" +
                 JSON.stringify({
-                  mensaje: JSON.stringify(info),
+                  mensaje: info.response,
                   lugar: `transporter.sendmail ELSE NO ERROR - contactController.js - nodemailer`,
                 })
             );
           }
         });
 
-        //   var mailClientFormOptions = {
-        //     from: `${process.env.NODEMAILER_USER}`,
-        //     to: `${process.env.NODEMAILER_USER}`,
-        //     subject: "Recibiste una consulta del sitio web - DLN Construcciones",
-        //     html: constactClientHtml(req.body.email, req.body.comment),
-        //   };
+          var mailClientFormOptions = {
+            from: `${process.env.NODEMAILER_USER}`,
+            to: `${process.env.NODEMAILER_USER}`,
+            subject: "Recibiste una consulta del sitio web - DLN Construcciones",
+            html: constactClientHtml(req.body.email, req.body.comment),
+          };
 
-        //   transporter.sendMail(mailClientFormOptions, function (error, info) {
-        //     if (error) {
-        //       console.log(error);
-        //       fs.appendFileSync('../errors-log.txt', ", \n" + JSON.stringify({
-        //         mensaje: error,
-        //         lugar: `transporter.sendmail - contactController.js - nodemailer`
-        //       }))
-        //     } else {
-        //       console.log("Email sent: " + info.response);
-        //       fs.appendFileSync('../errors-log.txt', ", \n" + JSON.stringify({
-        //         mensaje: JSON.stringify(info),
-        //         lugar: `transporter.sendmail - contactController.js - nodemailer`
-        //       }))
-        //     }
-        //   });
+          transporter.sendMail(mailClientFormOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+              fs.appendFileSync('../errors-log.txt', ", \n" + JSON.stringify({
+                mensaje: error,
+                lugar: `transporter.sendmail IF ERROR - contactController.js - nodemailer`
+              }))
+            } else {
+              console.log("Email sent: " + info.response);
+              fs.appendFileSync('../errors-log.txt', ", \n" + JSON.stringify({
+                mensaje: info.response,
+                lugar: `transporter.sendmail ELSE NO ERROR - contactController.js - nodemailer`
+              }))
+            }
+          });
       }
 
       main()
