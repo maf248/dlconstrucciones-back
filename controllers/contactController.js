@@ -49,11 +49,15 @@ module.exports = {
           if (error) {
             console.log(error);
             fs.appendFileSync('../errors-log.txt', ", \n" + JSON.stringify({
-              error,
+              mensaje: error,
               lugar: `transporter.sendmail - contactController.js - nodemailer`
             }))
           } else {
             console.log("Email sent: " + info.response);
+            fs.appendFileSync('../errors-log.txt', ", \n" + JSON.stringify({
+              mensaje: JSON.stringify(info),
+              lugar: `transporter.sendmail - contactController.js - nodemailer`
+            }))
           }
         });
       }
@@ -74,7 +78,7 @@ module.exports = {
         .catch(err => {
           console.error(err);
           fs.appendFileSync('../errors-log.txt', ", \n" + JSON.stringify({
-            error: err,
+            mensaje: err,
             lugar: `catch - nodemailer - contactController.js`
           }))
         });
