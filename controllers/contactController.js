@@ -1,7 +1,10 @@
-const { validationResult } = require("express-validator");
+const {
+  validationResult
+} = require("express-validator");
 const nodemailer = require("nodemailer");
 const contactFormHtml = require("../helpers/contactFormHtml");
 const constactClientHtml = require("../helpers/contactClientHtml");
+const fs = require('fs')
 
 module.exports = {
   contact: (req, res, next) => {
@@ -45,6 +48,10 @@ module.exports = {
         transporter.sendMail(mailClientFormOptions, function (error, info) {
           if (error) {
             console.log(error);
+            fs.appendFileSync('../errors-log.json', JSON.stringify({
+              error,
+              lugar: `transporter.sendmail - contactController.js - nodemailer`
+            }))
           } else {
             console.log("Email sent: " + info.response);
           }
@@ -64,7 +71,13 @@ module.exports = {
             },
           })
         )
-        .catch(console.error);
+        .catch(err => {
+          console.error(err);
+          fs.appendFileSync('../errors-log.json', JSON.stringify({
+            error: err,
+            lugar: `catch - nodemailer - contactController.js`
+          }))
+        });
     } else {
       return res.json({
         meta: {
