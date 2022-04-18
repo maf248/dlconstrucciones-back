@@ -15,6 +15,7 @@ const jobsRouter = require("./routes/jobs");
 const batchesRouter = require("./routes/batches");
 const categoriesRouter = require("./routes/categories");
 const projectsRouter = require("./routes/projects");
+const cashflowsRouter = require("./routes/cashflows");
 const paymentsRouter = require("./routes/payments");
 const assetsRouter = require("./routes/assets");
 const contactRouter = require("./routes/contact");
@@ -33,10 +34,16 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.setHeader('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, DELETE"
+  );
+  res.setHeader("Allow", "GET, POST, OPTIONS, PUT, DELETE");
   next();
 });
 
@@ -54,6 +61,7 @@ app.use("/api/jobs", jobsRouter);
 app.use("/api/batches", batchesRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/projects", projectsRouter);
+app.use("/api/cashflows", cashflowsRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/assets", assetsRouter);
 app.use("/api/contact", contactRouter);

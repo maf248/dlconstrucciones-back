@@ -15,7 +15,7 @@ module.exports = {
   },
   production: {
     username: "dlnconst_main",
-    password: "Juan.Iraola.2022",
+    password: "wrongpasswordtodevelop!!",
     database: "dlnconst_main",
     host: "127.0.0.1",
     dialect: "mysql",

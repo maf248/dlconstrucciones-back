@@ -22,9 +22,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL.UNSIGNED,
       allowNull: true,
     },
-    cashflow: {
-      type: DataTypes.STRING,
-      allowNull: true,
+    coin: {
+      type: DataTypes.ENUM("ARS", "USD"),
+      allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,
@@ -54,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
     });
     Project.hasMany(models.Payment, {
       as: "Payments",
+      foreignKey: "projects_id",
+    });
+    Project.hasMany(models.Cashflow, {
+      as: "Cashflows",
       foreignKey: "projects_id",
     });
     Project.hasMany(models.Asset, {

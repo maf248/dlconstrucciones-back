@@ -66,11 +66,11 @@ module.exports = {
               users_id: req.body.user,
               title: req.body.title,
               description: req.body.description,
+              coin: req.body.coin,
               total: req.body.total,
               balance: Number(
                 Number(req.body.total) - Number(newBalancePayments)
               ),
-              cashflow: req.file ? req.file.filename : undefined,
             },
             {
               where: {
@@ -124,9 +124,9 @@ module.exports = {
         users_id: req.body.user,
         title: req.body.title,
         description: req.body.description,
+        coin: req.body.coin,
         total: req.body.total,
         balance: req.body.total,
-        cashflow: req.file ? req.file.filename : null,
       })
         .then((project) => {
           return res.json({
@@ -177,65 +177,92 @@ module.exports = {
       .catch((err) => console.log(err));
   },
   cashflow: (req, res, next) => {
-    db.Project.findOne({
+    db.Cashflow.findOne({
       where: {
         cashflow: {
           [db.Sequelize.Op.like]: [req.params.file],
         },
       },
     })
-      .then((project) => {
-        if (project) {
-          if (req.decoded.role === "master") {
-            db.User.findOne({
-              where: {
-                id: {
-                  [db.Sequelize.Op.like]: [project.users_id],
-                },
+      .then((cashflow) => {
+        if (cashflow) {
+          db.Project.findOne({
+            where: {
+              id: {
+                [db.Sequelize.Op.like]: [cashflow.projects_id],
               },
-            })
-              .then((user) => {
-                if (user) {
-                  res.sendFile(
-                    path.join(__dirname, "../private/", `${req.params.file}`)
-                  );
-                } else {
-                  return res.json({
-                    meta: {
-                      status: 406,
+            },
+          })
+            .then((project) => {
+              if (project) {
+                if (req.decoded.role === "master") {
+                  db.User.findOne({
+                    where: {
+                      id: {
+                        [db.Sequelize.Op.like]: [project.users_id],
+                      },
                     },
-                    data: `Not found user: ${project.users_id}`,
-                  });
-                }
-              })
-              .catch((err) => console.log(err));
-          } else {
-            db.User.findOne({
-              where: {
-                id: {
-                  [db.Sequelize.Op.like]: [project.users_id],
-                },
-                hash_id: {
-                  [db.Sequelize.Op.like]: [req.selfHashId],
-                },
-              },
-            })
-              .then((user) => {
-                if (user) {
-                  res.sendFile(
-                    path.join(__dirname, "../private/", `${req.params.file}`)
-                  );
+                  })
+                    .then((user) => {
+                      if (user) {
+                        res.sendFile(
+                          path.join(
+                            __dirname,
+                            "../private/",
+                            `${req.params.file}`
+                          )
+                        );
+                      } else {
+                        return res.json({
+                          meta: {
+                            status: 406,
+                          },
+                          data: `Not found user: ${project.users_id}`,
+                        });
+                      }
+                    })
+                    .catch((err) => console.log(err));
                 } else {
-                  return res.json({
-                    meta: {
-                      status: 406,
+                  db.User.findOne({
+                    where: {
+                      id: {
+                        [db.Sequelize.Op.like]: [project.users_id],
+                      },
+                      hash_id: {
+                        [db.Sequelize.Op.like]: [req.selfHashId],
+                      },
                     },
-                    data: `Not found user: ${project.users_id}`,
-                  });
+                  })
+                    .then((user) => {
+                      if (user) {
+                        res.sendFile(
+                          path.join(
+                            __dirname,
+                            "../private/",
+                            `${req.params.file}`
+                          )
+                        );
+                      } else {
+                        return res.json({
+                          meta: {
+                            status: 406,
+                          },
+                          data: `Not found user: ${project.users_id}`,
+                        });
+                      }
+                    })
+                    .catch((err) => console.log(err));
                 }
-              })
-              .catch((err) => console.log(err));
-          }
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: `Not found project: ${cashflow.projects_id}`,
+                });
+              }
+            })
+            .catch((err) => console.log(err));
         } else {
           return res.json({
             meta: {
@@ -244,6 +271,7 @@ module.exports = {
             data: `Not found file: ${req.params.file}`,
           });
         }
+
       })
       .catch((err) => console.log(err));
   },
