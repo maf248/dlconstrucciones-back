@@ -9,6 +9,9 @@ module.exports = {
         {
           association: "Users",
         },
+        {
+          association: "Cashflows",
+        },
       ],
     })
       .then((projects) => {
@@ -27,6 +30,9 @@ module.exports = {
       include: [
         {
           association: "Payments",
+        },
+        {
+          association: "Cashflows",
         },
         {
           association: "Assets",
@@ -271,7 +277,6 @@ module.exports = {
             data: `Not found file: ${req.params.file}`,
           });
         }
-
       })
       .catch((err) => console.log(err));
   },
