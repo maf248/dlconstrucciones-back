@@ -64,9 +64,11 @@ module.exports = [
             (payment) => Number(payment.id) === Number(req.params.id)
           );
           const balanceWithoutEditedPaymentUsd =
-            Number(project.balance) + Number(paymentToEdit.totalUsd);
+            Number(project.balance) + Number(paymentToEdit[0].totalUsd);
+
           const balanceWithoutEditedPaymentArs =
-            Number(project.balance) + Number(paymentToEdit.totalArs);
+            Number(project.balance) + Number(paymentToEdit[0].totalArs);
+
           if (
             (project.coin === "USD" &&
               req.body.coin === "USD" &&
@@ -79,7 +81,8 @@ module.exports = [
                 0) ||
             (project.coin === "ARS" &&
               req.body.coin === "ARS" &&
-              Number(balanceWithoutEditedPaymentArs) < 0) ||
+              Number(balanceWithoutEditedPaymentArs) - Number(req.body.amount) <
+                0) ||
             (project.coin === "ARS" &&
               req.body.coin === "USD" &&
               Number(
