@@ -61,7 +61,7 @@ module.exports = {
     let errors = validationResult(req);
 
     if (errors.isEmpty()) {
-      db.Payment.sum("amount", {
+      db.Payment.sum(`${req.body.coin === 'USD' ? 'totalUsd' : 'amount'}`, {
         where: {
           projects_id: req.params.id,
         },
