@@ -2,11 +2,29 @@ const db = require("../db/models");
 const { validationResult } = require("express-validator");
 const { restart } = require("nodemon");
 
+const subTotal = (iva, amount) => (iva ? amount * 0.79 : null);
+
+const totalUsd = (coin, amount, cotizacion) => {
+  if (coin === "USD") {
+    return amount;
+  } else if (coin === "ARS") {
+    return amount / cotizacion;
+  }
+  return null;
+};
+const totalArs = (coin, amount, cotizacion) => {
+  if (coin === "USD") {
+    return amount * cotizacion;
+  } else if (coin === "ARS") {
+    return amount;
+  }
+  return null;
+};
+
 module.exports = {
   edit: (req, res, next) => {
     let errors = validationResult(req);
-    const cotizacionUsd =
-      req.body.coin === "ARS" ? req.body.cotizacionUsd : null;
+
     const subTotal = req.body.iva ? req.body.amount * 0.79 : null;
     const totalUsd = () => {
       if (req.body.coin === "USD") {
@@ -24,7 +42,7 @@ module.exports = {
         {
           projects_id: req.body.projects_id,
           coin: req.body.coin,
-          cotizacionUsd: cotizacionUsd,
+          cotizacionUsd: req.body.cotizacionUsd,
           totalUsd: totalUsd(),
           subTotal: subTotal,
           amount: req.body.amount,
@@ -102,27 +120,23 @@ module.exports = {
   },
   create: (req, res, next) => {
     let errors = validationResult(req);
-    const cotizacionUsd =
-      req.body.coin === "ARS" ? req.body.cotizacionUsd : null;
-    const subTotal = req.body.iva ? req.body.amount * 0.79 : null;
-    const totalUsd = () => {
-      if (req.body.coin === "USD") {
-        return req.body.iva ? subTotal : req.body.amount;
-      } else if (req.body.coin === "ARS") {
-        return req.body.iva
-          ? subTotal / req.body.cotizacionUsd
-          : req.body.amount / req.body.cotizacionUsd;
-      }
-      return null;
-    };
 
     if (errors.isEmpty()) {
       db.Payment.create({
         projects_id: req.body.projects_id,
         coin: req.body.coin,
-        cotizacionUsd: cotizacionUsd,
-        totalUsd: totalUsd(),
-        subTotal: subTotal,
+        cotizacionUsd: req.body.cotizacionUsd,
+        totalUsd: totalUsd(
+          req.body.coin,
+          req.body.amount,
+          req.body.cotizacionUsd
+        ),
+        totalArs: totalArs(
+          req.body.coin,
+          req.body.amount,
+          req.body.cotizacionUsd
+        ),
+        subTotal: subTotal(req.body.iva, req.body.amount),
         amount: req.body.amount,
         receipt: req.body.receipt,
         datetime: req.body.datetime,
@@ -204,42 +218,62 @@ module.exports = {
             .then((x) => {
               if (x) {
                 // Update project balance acording to all payments after creating new payment
-                db.Payment.sum("totalUsd", {
+                db.Project.findOne({
                   where: {
-                    projects_id: payment.projects_id,
+                    id: payment.projects_id,
                   },
                 })
-                  .then((newBalancePayments) => {
-                    db.Project.update(
-                      {
-                        balance: db.sequelize.literal(
-                          `total - ${Number(newBalancePayments)}`
-                        ),
-                      },
-                      {
-                        where: {
-                          id: payment.projects_id,
-                        },
-                      }
-                    )
-                      .then((y) => {
-                        if (y) {
-                          return res.json({
-                            meta: {
-                              status: 200,
-                            },
-                            data: `Successfully deleted payment id: ${req.params.id}`,
-                          });
-                        } else {
-                          return res.json({
-                            meta: {
-                              status: 406,
-                            },
-                            data: `Successfully deleted payment id: ${req.params.id} but could not update balance.`,
-                          });
+                  .then((project) => {
+                    if (project) {
+                      db.Payment.sum(
+                        `${project.coin === "USD" ? "totalUsd" : "totalArs"}`,
+                        {
+                          where: {
+                            projects_id: payment.projects_id,
+                          },
                         }
-                      })
-                      .catch((err) => console.log(err));
+                      )
+                        .then((newBalancePayments) => {
+                          db.Project.update(
+                            {
+                              balance: db.sequelize.literal(
+                                `total - ${Number(newBalancePayments)}`
+                              ),
+                            },
+                            {
+                              where: {
+                                id: payment.projects_id,
+                              },
+                            }
+                          )
+                            .then((y) => {
+                              if (y) {
+                                return res.json({
+                                  meta: {
+                                    status: 200,
+                                  },
+                                  data: `Successfully deleted payment id: ${req.params.id}`,
+                                });
+                              } else {
+                                return res.json({
+                                  meta: {
+                                    status: 406,
+                                  },
+                                  data: `Successfully deleted payment id: ${req.params.id} but could not update balance.`,
+                                });
+                              }
+                            })
+                            .catch((err) => console.log(err));
+                        })
+                        .catch((err) => console.log(err));
+                    } else {
+                      return res.json({
+                        meta: {
+                          status: 406,
+                        },
+                        data: `Successfully deleted payment id: ${req.params.id} but couldn't find project ID: ${payment.projects_id} to update balance.`,
+                      });
+                    }
                   })
                   .catch((err) => console.log(err));
               } else {

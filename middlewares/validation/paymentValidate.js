@@ -38,18 +38,13 @@ module.exports = [
     .optional()
     .withMessage("El amount debe ser numerico y mayor a 0.01"),
   check("cotizacionUsd")
-    .custom(async function (value, { req }) {
-      if (
-        req.body.coin === "ARS" &&
-        typeof parseInt(req.body.cotizacionUsd) === "number"
-      ) {
+    .custom((value, { req }) => {
+      if (req.body.amount >= 0.01) {
         return true;
-      } else {
-        return Promise.reject();
       }
+      return false;
     })
-    .optional()
-    .withMessage("Si la moneda es ARS, debe introducirse la cotizacionUsd"),
+    .withMessage("La cotización debe ser numerica y mayor a 0.01"),
   check("amount")
     .custom(async function (value, { req }) {
       let project;
