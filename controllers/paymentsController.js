@@ -24,27 +24,23 @@ const totalArs = (coin, amount, cotizacion) => {
 module.exports = {
   edit: (req, res, next) => {
     let errors = validationResult(req);
-
-    const subTotal = req.body.iva ? req.body.amount * 0.79 : null;
-    const totalUsd = () => {
-      if (req.body.coin === "USD") {
-        return req.body.iva ? subTotal : req.body.amount;
-      } else if (req.body.coin === "ARS") {
-        return req.body.iva
-          ? subTotal / req.body.cotizacionUsd
-          : req.body.amount / req.body.cotizacionUsd;
-      }
-      return null;
-    };
-
     if (errors.isEmpty()) {
       db.Payment.update(
         {
           projects_id: req.body.projects_id,
           coin: req.body.coin,
           cotizacionUsd: req.body.cotizacionUsd,
-          totalUsd: totalUsd(),
-          subTotal: subTotal,
+          totalUsd: totalUsd(
+            req.body.coin,
+            req.body.amount,
+            req.body.cotizacionUsd
+          ),
+          totalArs: totalArs(
+            req.body.coin,
+            req.body.amount,
+            req.body.cotizacionUsd
+          ),
+          subTotal: subTotal(req.body.iva, req.body.amount),
           amount: req.body.amount,
           receipt: req.body.receipt,
           datetime: req.body.datetime,
@@ -63,37 +59,45 @@ module.exports = {
         .then((payment) => {
           if (payment[0]) {
             // Update project balance acording to all payments after creating new payment
-            db.Payment.sum("totalUsd", {
+            db.Project.findOne({
               where: {
-                projects_id: req.body.projects_id,
+                id: req.body.projects_id,
               },
-            })
-              .then((newBalancePayments) => {
-                db.Project.update(
-                  {
-                    balance: db.sequelize.literal(
-                      `total - ${newBalancePayments}`
-                    ),
-                  },
-                  {
-                    where: {
-                      id: req.body.projects_id,
-                    },
-                  }
-                )
-                  .then((x) => {
-                    return res.json({
-                      meta: {
-                        status: 200,
-                      },
-                      data: {
-                        message: `Successfully edited payment and updated balance project id: ${req.body.projects_id}`,
-                      },
-                    });
-                  })
-                  .catch((err) => console.log(err));
+            }).then((project) => {
+              db.Payment.sum(`${project.coin === 'USD' ? 'totalUsd' : 'totalArs'}`, {
+                where: {
+                  projects_id: req.body.projects_id,
+                },
               })
-              .catch((err) => console.log(err));
+                .then((newBalancePayments) => {
+                  db.Project.update(
+                    {
+                      balance: db.sequelize.literal(
+                        `total - ${newBalancePayments}`
+                      ),
+                    },
+                    {
+                      where: {
+                        id: req.body.projects_id,
+                      },
+                    }
+                  )
+                    .then((x) => {
+                      return res.json({
+                        meta: {
+                          status: 200,
+                        },
+                        data: {
+                          message: `Successfully edited payment and updated balance project id: ${req.body.projects_id}`,
+                        },
+                      });
+                    })
+                    .catch((err) => console.log(err));
+                })
+                .catch((err) => console.log(err));
+            })
+            .catch((err) => console.log(err));
+            
           } else {
             return res.json({
               meta: {
@@ -120,7 +124,6 @@ module.exports = {
   },
   create: (req, res, next) => {
     let errors = validationResult(req);
-
     if (errors.isEmpty()) {
       db.Payment.create({
         projects_id: req.body.projects_id,
@@ -147,33 +150,44 @@ module.exports = {
         .then((payment) => {
           if (payment) {
             // Update project balance acording to all payments after creating new payment
-            db.Payment.sum("totalUsd", {
+            db.Project.findOne({
               where: {
-                projects_id: req.body.projects_id,
+                id: req.body.projects_id,
               },
             })
-              .then((newBalancePayments) => {
-                db.Project.update(
-                  {
-                    balance: db.sequelize.literal(
-                      `total - ${newBalancePayments}`
-                    ),
-                  },
+              .then((project) => {
+                db.Payment.sum(
+                  `${project.coin === "USD" ? "totalUsd" : "totalArs"}`,
                   {
                     where: {
-                      id: req.body.projects_id,
+                      projects_id: req.body.projects_id,
                     },
                   }
                 )
-                  .then((x) => {
-                    return res.json({
-                      meta: {
-                        status: 200,
+                  .then((newBalancePayments) => {
+                    db.Project.update(
+                      {
+                        balance: db.sequelize.literal(
+                          `total - ${newBalancePayments}`
+                        ),
                       },
-                      data: {
-                        message: `Successfully created payment and updated balance project id: ${req.body.projects_id}`,
-                      },
-                    });
+                      {
+                        where: {
+                          id: req.body.projects_id,
+                        },
+                      }
+                    )
+                      .then((x) => {
+                        return res.json({
+                          meta: {
+                            status: 200,
+                          },
+                          data: {
+                            message: `Successfully created payment and updated balance project id: ${req.body.projects_id}`,
+                          },
+                        });
+                      })
+                      .catch((err) => console.log(err));
                   })
                   .catch((err) => console.log(err));
               })
