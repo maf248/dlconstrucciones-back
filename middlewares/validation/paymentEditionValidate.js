@@ -48,20 +48,6 @@ module.exports = [
   check("amount")
     .custom(async function (value, { req }) {
       let project;
-      const cotizacionUsd =
-        req.body.coin === "ARS" ? req.body.cotizacionUsd : null;
-      const subTotal = req.body.iva ? req.body.amount * 0.79 : null;
-      const totalUsd = () => {
-        if (req.body.coin === "USD") {
-          return req.body.iva ? subTotal : req.body.amount;
-        } else if (req.body.coin === "ARS") {
-          return req.body.iva
-            ? subTotal / req.body.cotizacionUsd
-            : req.body.amount / req.body.cotizacionUsd;
-        }
-        return null;
-      };
-
       try {
         project = await db.Project.findOne({
           where: {
@@ -74,7 +60,33 @@ module.exports = [
           ],
         });
         if (project) {
-          if (Number(Number(project.balance) - Number(totalUsd())) < 0) {
+          const paymentToEdit = project.Payments.filter(
+            (payment) => Number(payment.id) === Number(req.params.id)
+          );
+          const balanceWithoutEditedPaymentUsd =
+            Number(project.balance) + Number(paymentToEdit.totalUsd);
+          const balanceWithoutEditedPaymentArs =
+            Number(project.balance) + Number(paymentToEdit.totalArs);
+          if (
+            (project.coin === "USD" &&
+              req.body.coin === "USD" &&
+              Number(balanceWithoutEditedPaymentUsd) - Number(req.body.amount) <
+                0) ||
+            (project.coin === "USD" &&
+              req.body.coin === "ARS" &&
+              Number(balanceWithoutEditedPaymentUsd) -
+                Number(req.body.amount / req.body.cotizacionUsd) <
+                0) ||
+            (project.coin === "ARS" &&
+              req.body.coin === "ARS" &&
+              Number(balanceWithoutEditedPaymentArs) < 0) ||
+            (project.coin === "ARS" &&
+              req.body.coin === "USD" &&
+              Number(
+                Number(balanceWithoutEditedPaymentArs) -
+                  Number(req.body.amount * req.body.cotizacionUsd)
+              ) < 0)
+          ) {
             return Promise.reject();
           } else {
             return true;
