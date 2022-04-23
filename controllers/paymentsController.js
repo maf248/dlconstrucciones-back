@@ -4,19 +4,19 @@ const { restart } = require("nodemon");
 
 const subTotal = (iva, amount) => (iva ? amount * 0.79 : null);
 
-const totalUsd = (coin, amount, cotizacion) => {
+const totalUsd = (coin, amount, cotizacion, iva) => {
   if (coin === "USD") {
-    return amount;
+    return iva ? amount * 0.79 : amount;
   } else if (coin === "ARS") {
-    return amount / cotizacion;
+    return iva ? (amount * 0.79) / cotizacion : amount / cotizacion;
   }
   return null;
 };
-const totalArs = (coin, amount, cotizacion) => {
+const totalArs = (coin, amount, cotizacion, iva) => {
   if (coin === "USD") {
-    return amount * cotizacion;
+    return iva ? (amount * 0.79) * cotizacion : amount * cotizacion;
   } else if (coin === "ARS") {
-    return amount;
+    return iva ? amount * 0.79 : amount;
   }
   return null;
 };
@@ -33,12 +33,14 @@ module.exports = {
           totalUsd: totalUsd(
             req.body.coin,
             req.body.amount,
-            req.body.cotizacionUsd
+            req.body.cotizacionUsd,
+            req.body.iva
           ),
           totalArs: totalArs(
             req.body.coin,
             req.body.amount,
-            req.body.cotizacionUsd
+            req.body.cotizacionUsd,
+            req.body.iva
           ),
           subTotal: subTotal(req.body.iva, req.body.amount),
           amount: req.body.amount,
@@ -63,41 +65,44 @@ module.exports = {
               where: {
                 id: req.body.projects_id,
               },
-            }).then((project) => {
-              db.Payment.sum(`${project.coin === 'USD' ? 'totalUsd' : 'totalArs'}`, {
-                where: {
-                  projects_id: req.body.projects_id,
-                },
-              })
-                .then((newBalancePayments) => {
-                  db.Project.update(
-                    {
-                      balance: db.sequelize.literal(
-                        `total - ${newBalancePayments}`
-                      ),
-                    },
-                    {
-                      where: {
-                        id: req.body.projects_id,
-                      },
-                    }
-                  )
-                    .then((x) => {
-                      return res.json({
-                        meta: {
-                          status: 200,
-                        },
-                        data: {
-                          message: `Successfully edited payment and updated balance project id: ${req.body.projects_id}`,
-                        },
-                      });
-                    })
-                    .catch((err) => console.log(err));
-                })
-                .catch((err) => console.log(err));
             })
-            .catch((err) => console.log(err));
-            
+              .then((project) => {
+                db.Payment.sum(
+                  `${project.coin === "USD" ? "totalUsd" : "totalArs"}`,
+                  {
+                    where: {
+                      projects_id: req.body.projects_id,
+                    },
+                  }
+                )
+                  .then((newBalancePayments) => {
+                    db.Project.update(
+                      {
+                        balance: db.sequelize.literal(
+                          `total - ${newBalancePayments}`
+                        ),
+                      },
+                      {
+                        where: {
+                          id: req.body.projects_id,
+                        },
+                      }
+                    )
+                      .then((x) => {
+                        return res.json({
+                          meta: {
+                            status: 200,
+                          },
+                          data: {
+                            message: `Successfully edited payment and updated balance project id: ${req.body.projects_id}`,
+                          },
+                        });
+                      })
+                      .catch((err) => console.log(err));
+                  })
+                  .catch((err) => console.log(err));
+              })
+              .catch((err) => console.log(err));
           } else {
             return res.json({
               meta: {
@@ -132,12 +137,14 @@ module.exports = {
         totalUsd: totalUsd(
           req.body.coin,
           req.body.amount,
-          req.body.cotizacionUsd
+          req.body.cotizacionUsd,
+          req.body.iva
         ),
         totalArs: totalArs(
           req.body.coin,
           req.body.amount,
-          req.body.cotizacionUsd
+          req.body.cotizacionUsd,
+          req.body.iva
         ),
         subTotal: subTotal(req.body.iva, req.body.amount),
         amount: req.body.amount,
