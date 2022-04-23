@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM("ARS", "USD"),
       allowNull: false,
     },
+    amount: {
+      type: DataTypes.DECIMAL.UNSIGNED,
+      allowNull: false,
+    },
     cotizacionUsd: {
       type: DataTypes.DECIMAL.UNSIGNED,
       allowNull: true,
@@ -18,13 +22,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL.UNSIGNED,
       allowNull: false,
     },
+    totalArs: {
+      type: DataTypes.DECIMAL.UNSIGNED,
+      allowNull: false,
+    },
     subTotal: {
       type: DataTypes.DECIMAL.UNSIGNED,
       allowNull: true,
     },
-    amount: {
-      type: DataTypes.DECIMAL.UNSIGNED,
+    iva: {
+      type: DataTypes.ENUM("true", "false"),
       allowNull: false,
+      defaultValue: "false",
     },
     receipt: {
       type: DataTypes.STRING,
@@ -41,11 +50,6 @@ module.exports = (sequelize, DataTypes) => {
     wayToPay: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    iva: {
-      type: DataTypes.ENUM("true", "false"),
-      allowNull: false,
-      defaultValue: "false",
     },
     created_at: {
       type: DataTypes.DATE,
