@@ -36,9 +36,10 @@ const storage = multer.diskStorage({
     return cb(null, dirImage);
   },
   filename: function (req, file, cb) {
+    console.log("🚀 ~ file: cashflows.js ~ line 39 ~ file", file);
     return cb(
       null,
-      "Cashflow" +
+      path.parse(file.originalname).name +
         "_" +
         Date.now() +
         path.extname(file.originalname.toLowerCase())
@@ -63,6 +64,10 @@ router.patch(
   cashflowValidate,
   cashflowsController.edit
 );
-router.delete("/delete/:id", masterWebTokenMiddleware, cashflowsController.delete);
+router.delete(
+  "/delete/:id",
+  masterWebTokenMiddleware,
+  cashflowsController.delete
+);
 
 module.exports = router;
