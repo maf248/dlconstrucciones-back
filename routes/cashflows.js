@@ -36,7 +36,6 @@ const storage = multer.diskStorage({
     return cb(null, dirImage);
   },
   filename: function (req, file, cb) {
-    console.log("🚀 ~ file: cashflows.js ~ line 39 ~ file", file);
     return cb(
       null,
       path.parse(file.originalname).name +
