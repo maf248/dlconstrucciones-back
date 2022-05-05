@@ -1,4 +1,5 @@
 const db = require("../db/models");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 module.exports = {
@@ -51,7 +52,6 @@ module.exports = {
           body: req.body,
         },
       });
-
     }
   },
   create: (req, res, next) => {
@@ -100,27 +100,51 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Cashflow.destroy({
+    db.Cashflow.findOne({
       where: {
         id: {
           [db.Sequelize.Op.like]: [req.params.id],
         },
       },
     })
-      .then((x) => {
-        if (x) {
-          return res.json({
-            meta: {
-              status: 200,
+      .then((cashflow) => {
+        if (cashflow) {
+          db.Cashflow.destroy({
+            where: {
+              id: {
+                [db.Sequelize.Op.like]: [req.params.id],
+              },
             },
-            data: `Successfully deleted cashflow id: ${req.params.id}`,
-          });
+          })
+            .then((x) => {
+              if (x) {
+                try {
+                  fs.unlinkSync(`./private/${cashflow.dataValues.cashflow}`);
+                } catch (err) {
+                  console.error(err);
+                }
+                return res.json({
+                  meta: {
+                    status: 200,
+                  },
+                  data: `Successfully deleted cashflow id: ${req.params.id}`,
+                });
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: `Could not delete cashflow id: ${req.params.id}`,
+                });
+              }
+            })
+            .catch((err) => console.log(err));
         } else {
           return res.json({
             meta: {
               status: 406,
             },
-            data: `Could not delete cashflow id: ${req.params.id}`,
+            data: `Could not find cashflow id: ${req.params.id}`,
           });
         }
       })

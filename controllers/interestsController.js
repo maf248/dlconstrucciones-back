@@ -1,4 +1,5 @@
 const db = require("../db/models");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 module.exports = {
@@ -128,27 +129,51 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Interest.destroy({
+    db.Interest.findOne({
       where: {
         id: {
           [db.Sequelize.Op.like]: [req.params.id],
         },
       },
     })
-      .then((x) => {
-        if (x) {
-          return res.json({
-            meta: {
-              status: 200,
+      .then((interest) => {
+        if (interest) {
+          db.Interest.destroy({
+            where: {
+              id: {
+                [db.Sequelize.Op.like]: [req.params.id],
+              },
             },
-            data: `Successfully deleted interest id: ${req.params.id}`,
-          });
+          })
+            .then((x) => {
+              if (x) {
+                try {
+                  fs.unlinkSync(`./public/images/${interest.dataValues.image}`);
+                } catch (err) {
+                  console.error(err);
+                }
+                return res.json({
+                  meta: {
+                    status: 200,
+                  },
+                  data: `Successfully deleted interest id: ${req.params.id}`,
+                });
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: `Could not delete interest id: ${req.params.id}`,
+                });
+              }
+            })
+            .catch((err) => console.log(err));
         } else {
           return res.json({
             meta: {
               status: 406,
             },
-            data: `Could not delete interest id: ${req.params.id}`,
+            data: `Could not find interest id: ${req.params.id}`,
           });
         }
       })

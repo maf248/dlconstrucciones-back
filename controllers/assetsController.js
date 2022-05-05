@@ -1,7 +1,8 @@
 const db = require("../db/models");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
-const { type } = require("express/lib/response");
 const assetTypeSetter = require("../helpers/assetTypeSetter");
+
 module.exports = {
   edit: (req, res, next) => {
     let errors = validationResult(req);
@@ -57,7 +58,7 @@ module.exports = {
   },
   create: (req, res, next) => {
     let errors = validationResult(req);
-    
+
     if (errors.isEmpty() && req.files.length > 0) {
       const promises = req.files.map((asset) =>
         db.Asset.create({
@@ -76,7 +77,10 @@ module.exports = {
           });
         })
         .catch((err) => console.log(err));
-    } else if (errors.isEmpty() && (req.files === undefined || req.files.length < 1)) {
+    } else if (
+      errors.isEmpty() &&
+      (req.files === undefined || req.files.length < 1)
+    ) {
       return res.json({
         meta: {
           status: 400,
@@ -99,27 +103,51 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Asset.destroy({
+    db.Asset.findOne({
       where: {
         id: {
           [db.Sequelize.Op.like]: [req.params.id],
         },
       },
     })
-      .then((x) => {
-        if (x) {
-          return res.json({
-            meta: {
-              status: 200,
+      .then((asset) => {
+        if (asset) {
+          db.Asset.destroy({
+            where: {
+              id: {
+                [db.Sequelize.Op.like]: [req.params.id],
+              },
             },
-            data: `Successfully deleted asset id: ${req.params.id}`,
-          });
+          })
+            .then((x) => {
+              if (x) {
+                try {
+                  fs.unlinkSync(`./private/${asset.dataValues.asset}`);
+                } catch (err) {
+                  console.error(err);
+                }
+                return res.json({
+                  meta: {
+                    status: 200,
+                  },
+                  data: `Successfully deleted asset id: ${req.params.id}`,
+                });
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: `Could not delete asset id: ${req.params.id}`,
+                });
+              }
+            })
+            .catch((err) => console.log(err));
         } else {
           return res.json({
             meta: {
               status: 406,
             },
-            data: `Could not delete asset id: ${req.params.id}`,
+            data: `Could not find asset id: ${req.params.id}`,
           });
         }
       })

@@ -1,4 +1,5 @@
 const db = require("../db/models");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 module.exports = {
@@ -141,27 +142,51 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Batch.destroy({
+    db.Batch.findOne({
       where: {
         id: {
           [db.Sequelize.Op.like]: [req.params.id],
         },
       },
     })
-      .then((x) => {
-        if (x) {
-          return res.json({
-            meta: {
-              status: 200,
+      .then((batch) => {
+        if (batch) {
+          db.Batch.destroy({
+            where: {
+              id: {
+                [db.Sequelize.Op.like]: [req.params.id],
+              },
             },
-            data: `Successfully deleted batch id: ${req.params.id}`,
-          });
+          })
+            .then((x) => {
+              if (x) {
+                try {
+                  fs.unlinkSync(`./public/images/${batch.dataValues.image}`);
+                } catch (err) {
+                  console.error(err);
+                }
+                return res.json({
+                  meta: {
+                    status: 200,
+                  },
+                  data: `Successfully deleted batch id: ${req.params.id}`,
+                });
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: `Could not delete batch id: ${req.params.id}`,
+                });
+              }
+            })
+            .catch((err) => console.log(err));
         } else {
           return res.json({
             meta: {
               status: 406,
             },
-            data: `Could not delete batch id: ${req.params.id}`,
+            data: `Could not find batch id: ${req.params.id}`,
           });
         }
       })
