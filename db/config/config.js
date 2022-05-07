@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 module.exports = {
   development: {
     username: "root",
@@ -15,7 +17,7 @@ module.exports = {
   },
   production: {
     username: "dlnconst_main",
-    password: "wrongpasswordtodevelop!!",
+    password: process.env.PASSWORD_DB,
     database: "dlnconst_main",
     host: "127.0.0.1",
     dialect: "mysql",
