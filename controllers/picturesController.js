@@ -1,4 +1,5 @@
 const db = require("../db/models");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 module.exports = {
@@ -22,7 +23,12 @@ module.exports = {
           });
         })
         .catch((err) => console.log(err));
-    } else if (!errors.isEmpty() && req.files && Array.isArray(req.files) && req.files.length > 1) {
+    } else if (
+      !errors.isEmpty() &&
+      req.files &&
+      Array.isArray(req.files) &&
+      req.files.length > 1
+    ) {
       const validFormats = ["image/jpg", "image/jpeg", "image/png"];
 
       const validFilesFormat = req.files.filter((x) =>
@@ -139,27 +145,48 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Picture.destroy({
-      where: {
-        id: {
-          [db.Sequelize.Op.like]: [req.params.id],
-        },
-      },
-    })
-      .then((x) => {
-        if (x) {
-          return res.json({
-            meta: {
-              status: 200,
+    db.Picture.findByPk(req.params.id)
+      .then((picture) => {
+        if (picture) {
+          db.Picture.destroy({
+            where: {
+              id: {
+                [db.Sequelize.Op.like]: [req.params.id],
+              },
             },
-            data: `Successfully deleted service picture id: ${req.params.id}`,
-          });
+          })
+            .then((x) => {
+              if (x) {
+                try {
+                  fs.unlinkSync(
+                    `./public/images/${picture.dataValues.picture}`
+                  );
+                } catch (err) {
+                  console.error(err);
+                }
+
+                return res.json({
+                  meta: {
+                    status: 200,
+                  },
+                  data: `Successfully deleted picture id: ${req.params.id}`,
+                });
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: `Could not delete picture id: ${req.params.id}`,
+                });
+              }
+            })
+            .catch((err) => console.log(err));
         } else {
           return res.json({
             meta: {
               status: 406,
             },
-            data: `Could not delete service picture id: ${req.params.id}`,
+            data: `Could not find picture id: ${req.params.id}`,
           });
         }
       })

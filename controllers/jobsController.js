@@ -1,4 +1,5 @@
 const db = require("../db/models");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 module.exports = {
@@ -140,30 +141,51 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Job.destroy({
-      where: {
-        id: {
-          [db.Sequelize.Op.like]: [req.params.id],
-        },
-      },
+    db.Job.findByPk(req.params.id)
+    .then((job) => {
+      if (job) {
+        db.Job.destroy({
+          where: {
+            id: {
+              [db.Sequelize.Op.like]: [req.params.id],
+            },
+          },
+        })
+          .then((x) => {
+            if (x) {
+              try {
+                fs.unlinkSync(
+                  `./public/images/${job.dataValues.image}`
+                );
+              } catch (err) {
+                console.error(err);
+              }
+
+              return res.json({
+                meta: {
+                  status: 200,
+                },
+                data: `Successfully deleted job id: ${req.params.id}`,
+              });
+            } else {
+              return res.json({
+                meta: {
+                  status: 406,
+                },
+                data: `Could not delete job id: ${req.params.id}`,
+              });
+            }
+          })
+          .catch((err) => console.log(err));
+      } else {
+        return res.json({
+          meta: {
+            status: 406,
+          },
+          data: `Could not find job id: ${req.params.id}`,
+        });
+      }
     })
-      .then((x) => {
-        if (x) {
-          return res.json({
-            meta: {
-              status: 200,
-            },
-            data: `Successfully deleted job id: ${req.params.id}`,
-          });
-        } else {
-          return res.json({
-            meta: {
-              status: 406,
-            },
-            data: `Could not delete job id: ${req.params.id}`,
-          });
-        }
-      })
-      .catch((err) => console.log(err));
+    .catch((err) => console.log(err));
   },
 };

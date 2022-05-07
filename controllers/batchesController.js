@@ -142,14 +142,18 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Batch.findOne({
-      where: {
-        id: {
-          [db.Sequelize.Op.like]: [req.params.id],
+    db.Batch.findByPk(req.params.id, {
+      include: [
+        {
+          association: "Images",
         },
-      },
+      ],
     })
       .then((batch) => {
+        console.log(
+          "🚀 ~ file: batchesController.js ~ line 153 ~ .then ~ batch",
+          batch
+        );
         if (batch) {
           db.Batch.destroy({
             where: {
@@ -165,6 +169,23 @@ module.exports = {
                 } catch (err) {
                   console.error(err);
                 }
+
+                // if (batch.dataValues.Images.length) {
+                //   batch.dataValues.Images.forEach((element) => {
+
+
+                //     element.image
+                //     try {
+                //       fs.unlinkSync(`./public/images/${batch.dataValues.image}`);
+                //     } catch (err) {
+                //       console.error(err);
+                //     }
+                    
+                //   });
+
+              
+                // }
+
                 return res.json({
                   meta: {
                     status: 200,

@@ -944,6 +944,11 @@ module.exports = {
             .then((x) => {
               console.log(x);
               if (x) {
+                try {
+                  fs.unlinkSync(`./public/images/users/${user.dataValues.avatar}`);
+                } catch (err) {
+                  console.error(err);
+                }
                 return res.json({
                   meta: {
                     status: 200,
