@@ -1,4 +1,5 @@
 const db = require("../db/models");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 module.exports = {
@@ -132,27 +133,80 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Type.destroy({
-      where: {
-        id: {
-          [db.Sequelize.Op.like]: [req.params.id],
+    db.Type.findByPk(req.params.id, {
+      include: [
+        {
+          association: "Jobs",
         },
-      },
+      ],
     })
-      .then((x) => {
-        if (x) {
-          return res.json({
-            meta: {
-              status: 200,
+      .then((type) => {
+        if (type) {
+          db.Type.destroy({
+            where: {
+              id: {
+                [db.Sequelize.Op.like]: [req.params.id],
+              },
             },
-            data: `Successfully deleted type id: ${req.params.id}`,
-          });
+          })
+            .then((x) => {
+              if (x) {
+                try {
+                  fs.unlinkSync(`./public/images/${type.dataValues.image}`);
+                } catch (err) {
+                  console.error(err);
+                }
+
+                if (type.dataValues.Jobs.length) {
+                  type.dataValues.Jobs.forEach((element) => {
+                    db.Job.destroy({
+                      where: {
+                        id: {
+                          [db.Sequelize.Op.like]: [element.id],
+                        },
+                      },
+                    })
+                      .then((x) => {
+                        if (x) {
+                          try {
+                            fs.unlinkSync(`./public/images/${element.image}`);
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        }
+                      })
+                      .catch((err) => console.log(err));
+                  });
+                  return res.json({
+                    meta: {
+                      status: 200,
+                    },
+                    data: `Successfully deleted all jobs and type id: ${req.params.id}`,
+                  });
+                }
+
+                return res.json({
+                  meta: {
+                    status: 200,
+                  },
+                  data: `Successfully deleted type id: ${req.params.id}`,
+                });
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: `Could not delete type id: ${req.params.id}`,
+                });
+              }
+            })
+            .catch((err) => console.log(err));
         } else {
           return res.json({
             meta: {
               status: 406,
             },
-            data: `Could not delete type id: ${req.params.id}`,
+            data: `Could not find type id: ${req.params.id}`,
           });
         }
       })
