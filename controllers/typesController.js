@@ -184,13 +184,6 @@ module.exports = {
                     data: `Successfully deleted all jobs and type id: ${req.params.id}`,
                   });
                 }
-
-                return res.json({
-                  meta: {
-                    status: 200,
-                  },
-                  data: `Successfully deleted type id: ${req.params.id}`,
-                });
               } else {
                 return res.json({
                   meta: {

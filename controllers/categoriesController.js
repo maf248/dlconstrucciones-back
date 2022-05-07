@@ -1,4 +1,5 @@
 const db = require("../db/models");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 module.exports = {
@@ -132,27 +133,73 @@ module.exports = {
     }
   },
   delete: (req, res, next) => {
-    db.Category.destroy({
-      where: {
-        id: {
-          [db.Sequelize.Op.like]: [req.params.id],
+    db.Category.findByPk(req.params.id, {
+      include: [
+        {
+          association: "Batches",
         },
-      },
+      ],
     })
-      .then((x) => {
-        if (x) {
-          return res.json({
-            meta: {
-              status: 200,
+      .then((category) => {
+        if (category) {
+          db.Category.destroy({
+            where: {
+              id: {
+                [db.Sequelize.Op.like]: [req.params.id],
+              },
             },
-            data: `Successfully deleted category id: ${req.params.id}`,
-          });
+          })
+            .then((x) => {
+              if (x) {
+                try {
+                  fs.unlinkSync(`./public/images/${category.dataValues.image}`);
+                } catch (err) {
+                  console.error(err);
+                }
+
+                if (category.dataValues.Batches.length) {
+                  category.dataValues.Batches.forEach((element) => {
+                    db.Batch.destroy({
+                      where: {
+                        id: {
+                          [db.Sequelize.Op.like]: [element.id],
+                        },
+                      },
+                    })
+                      .then((x) => {
+                        if (x) {
+                          try {
+                            fs.unlinkSync(`./public/images/${element.image}`);
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        }
+                      })
+                      .catch((err) => console.log(err));
+                  });
+                  return res.json({
+                    meta: {
+                      status: 200,
+                    },
+                    data: `Successfully deleted all batches and category id: ${req.params.id}`,
+                  });
+                }
+              } else {
+                return res.json({
+                  meta: {
+                    status: 406,
+                  },
+                  data: `Could not delete category id: ${req.params.id}`,
+                });
+              }
+            })
+            .catch((err) => console.log(err));
         } else {
           return res.json({
             meta: {
               status: 406,
             },
-            data: `Could not delete category id: ${req.params.id}`,
+            data: `Could not find category id: ${req.params.id}`,
           });
         }
       })
